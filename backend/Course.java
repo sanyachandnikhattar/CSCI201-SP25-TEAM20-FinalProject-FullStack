@@ -57,6 +57,7 @@ public class Course {
 		dbManager.connection(); 
 		String toExecString = "INSERT INTO Course (courseID, courseName, courseDates, courseTime) VALUES (" + courseID + "," + courseName + "," + courseDates + "," + courseTime + ")"; 
 		dbManager.executeQuery(toExecString); 
+		dbManager.disconnection(); 
 		
 	}
 	
@@ -74,6 +75,7 @@ public class Course {
 		dbManager.connection(); 
 		String toExecString = "DELETE FROM Course WHERE courseID = " + courseID; 
 		dbManager.executeQuery(toExecString); 
+		dbManager.disconnection(); 
 	}
 	
 	
