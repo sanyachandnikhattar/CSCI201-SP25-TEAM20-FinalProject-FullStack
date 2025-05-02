@@ -13,17 +13,14 @@ public class DBManager {
 	ResultSet rs; 
 	
 	//establish a connection to the database 
-	public Connection connection() throws SQLException 
-	{
+	public void connection() throws SQLException {
 		conn = null; 
 		try {
 			//replace empty String with correct address for our database 
 			conn = DriverManager.getConnection(""); 
-			return conn;
 		}
 		catch(SQLException sqle) {
-			System.out.println("Connection error: " + sqle.getMessage());
-			return null;
+			System.out.println("Connection error: " + sqle.getMessage()); 
 		}
 	}
 	
