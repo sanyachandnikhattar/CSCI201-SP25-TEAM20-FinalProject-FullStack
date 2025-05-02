@@ -4,9 +4,10 @@ import api from "./api"
 /**
  * [POST] Create Assignment
  * @param {string} username
+ * @param {object} assignmentData
  * TODO: Not Implemented
  */
-export function createAssignment(username){
+export function createAssignment(username, assignmentData){
     return api.post("/create-assignment");
 }
 
@@ -36,9 +37,10 @@ export function markCompleteAssignment(username, assignmentID){
  * [Patch] Edit Assignment
  * @param {string} username
  * @param {string} assignmentID
+ * @param {object} assignmentData
  * TODO: Not Implemented
  */
-export function editAssignmentInfo(username, assignmentID){
+export function editAssignmentInfo(username, assignmentID, assignmentData){
     return api.patch("/edit-assignment-info");
 }
 

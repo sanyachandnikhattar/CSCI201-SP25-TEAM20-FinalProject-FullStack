@@ -2,8 +2,8 @@ import {Link} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
-import {getCourseAssignmentsById, getCourseInfoById} from "../../services/courseService";
+import { createAssignment, markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
+import { getCourseAssignmentsById, getCourseInfoById } from "../../services/courseService";
 import { CourseHeader } from '../../components/course_page/CourseHeader';
 import { AssignmentList } from '../../components/course_page/AssignmentList';
 import { Modal } from '../../components/course_page/Modal';
@@ -99,7 +99,7 @@ function CoursePage(){
 
   const getCourseAssignments = async () => {
     try {
-      const response = getCourseAssignmentsById("", courseId);
+      const response = getCourseAssignmentsById(username, courseId);
       setAssignments(response.assignments);
     } catch (e) {
 
@@ -134,22 +134,35 @@ function CoursePage(){
   const handleFormSubmit = (updatedData) => {
     if (isAddingAssignment) {
       // Add new assignment
-      const newAssignments = [...assignments, updatedData];
-      setAssignments(newAssignments);
+      try{
+        const response = createAssignment(username, updatedData);
+        // TODO: Update only when the request is successful
+        const newAssignments = [...assignments, updatedData];
+        setAssignments(newAssignments);
+      }catch (e){
+
+      }
+
     } else if (editingIndex !== null && assignments) {
       // Edit existing assignment
-      const newAssignments = [...assignments];
-      newAssignments[editingIndex] = {
-        ...newAssignments[editingIndex],
-        ...updatedData
-      };
-      setAssignments(newAssignments);
+      try{
+        // TODO: Map an index to an assignmentID
+        const response = editAssignmentInfo(username, assignmentID, updatedData);
+        // TODO: Update only when the request is successful
+        const newAssignments = [...assignments];
+        newAssignments[editingIndex] = {
+          ...newAssignments[editingIndex],
+          ...updatedData
+        };
+        setAssignments(newAssignments);
+      }catch (e){
+
+      }
+
+
     }
     handleCloseModal();
   };
-
-  // Function to handle removing an assignment
-
 
   const handleAddAssignmentClick = () => {
     setIsAddingAssignment(true);
@@ -161,6 +174,7 @@ function CoursePage(){
     setIsModalOpen(true);
   };
 
+  // TODO: Loading content is required
   if(!courseInfo || !assignments){
     return(
         <div>
@@ -168,9 +182,8 @@ function CoursePage(){
         </div>
     )
   }
-  console.log(assignments);
-  return(
 
+  return(
       <div className={styles.courseDetailPage}>
         <div className={styles.rectangle}></div>
         <div className={styles.content}>
@@ -201,6 +214,7 @@ function CoursePage(){
               assignment={currentAssignment}
               onSubmit={handleFormSubmit}
               onCancel={handleCloseModal}
+              isAddingNew={isAddingAssignment}
           />
         </Modal>
       </div>
