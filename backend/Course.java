@@ -1,6 +1,9 @@
-package final_project;
+package backend;
 
 import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
 
 public class Course {
 	private int courseID; 
@@ -36,46 +39,119 @@ public class Course {
 		courseAssignments.add(assignment); 
 	}
 	
-	public Assignment findAssignment(Assignment assignment) {
+	public Assignment findAssignment(Assignment assignment) 
+	{
 		for(int i=0; i<courseAssignments.size(); i++) {
-			if(assignment.assignmentID == courseAssignments[i].assignmentID) {
-				return courseAssignments[i]; 
+			if(assignment.getAssignmentID() == courseAssignments.get(i).getAssignmentID()) 
+			{
+				return courseAssignments.get(i); 
 			}
 		}
+		
+		return null; //return statement when no match is found
 	}
 	
-	public void deleteAssignment(Assignment assignment) {
-		for(int i=0; i<courseAssignments.size(); i++) {
-			if(assignment.assignmentID == courseAssignment[i].assignmentID) {
+	public void deleteAssignment(Assignment assignment) 
+	{
+		for(int i=0; i<courseAssignments.size(); i++) 
+		{
+			if(assignment.getAssignmentID() == courseAssignments.get(i).getAssignmentID()) 
+			{
 				courseAssignments.remove(i); 
 			}
 		}
 	}
 	
 	//add to the Course table in the database
-	public void createCourse() { 
-		dbManager.connection(); 
-		String toExecString = "INSERT INTO Course (courseID, courseName, courseDates, courseTime) VALUES (" + courseID + "," + courseName + "," + courseDates + "," + courseTime + ")"; 
-		dbManager.executeQuery(toExecString); 
-		dbManager.disconnection(); 
+	public void createCourse() 
+	{ 
+		Connection conn = null;
+		String toExecString = "";
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			conn = dbManager.connection(); 
+			toExecString = "INSERT INTO Course (courseID, courseName, courseDates, courseTime) VALUES (" + courseID + "," + courseName + "," + courseDates + "," + courseTime + ")"; 
+			//dbManager.executeQuery(toExecString);
+			stmt = conn.prepareStatement(toExecString);
+		}
+		
+		catch (SQLException e) 
+		{
+	        e.printStackTrace();
+	        // Handle exception appropriately - maybe log it or throw a custom exception
+		} 
+		
+		finally 
+		{
+        //always close resources in finally block
+	        try 
+	        {
+	          if (toExecString != null) stmt.close();
+	        } 
+	        
+	        catch (SQLException e) 
+	        {
+	            e.printStackTrace();
+	        }
+	        
+	        // Always disconnect in finally block
+	        if (conn != null) {
+	            dbManager.disconnection();
+	        }
+	    }
 		
 	}
 	
 	//if a logged-in User creates a course, they should automatically join the course 
-	public void loggedIncreateCourse(String userID, Scheduler scheduler) {
+	public void loggedIncreateCourse(String userID, Scheduler scheduler) 
+	{
 		//add the course to the database 
 		createCourse(); 
 		
 		//automatically have the User join the course 
-		scheduler.join(courseID, userID); 
+		scheduler.joinCourse(courseID, userID); 
 	}
 	
 	//remove from the Course table in the database 
-	public void deleteCourse() {
-		dbManager.connection(); 
-		String toExecString = "DELETE FROM Course WHERE courseID = " + courseID; 
-		dbManager.executeQuery(toExecString); 
-		dbManager.disconnection(); 
+	public void deleteCourse() 
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try 
+		{
+			conn = dbManager.connection(); 
+			String toExecString = "DELETE FROM Course WHERE courseID = " + courseID; 
+			stmt = conn.prepareStatement(toExecString);
+		}
+		
+		catch (SQLException e) 
+		{
+	        e.printStackTrace();
+	        // Handle exception appropriately
+	    } 
+		
+		finally 
+		{
+	        // Always close resources in finally block
+	        try 
+	        {
+	        	if (stmt != null) stmt.close();
+	        } 
+	        
+	        catch (SQLException e) 
+	        {
+	            e.printStackTrace();
+	        }
+	        
+	        // Always disconnect in finally block
+	        if (conn != null) 
+	        {
+	            dbManager.disconnection();
+	        }
+		}
 	}
 	
 	
