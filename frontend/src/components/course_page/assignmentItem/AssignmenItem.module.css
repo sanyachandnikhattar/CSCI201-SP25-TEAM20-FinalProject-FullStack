@@ -62,18 +62,10 @@
 
 
 .editButton, .deleteButton{
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     cursor: pointer;
     color: white;
 }
-
-/*.editButton{*/
-/*    color:#32ab46;*/
-/*}*/
-
-/*.deleteButton{*/
-/*    color:#d11f2b;*/
-/*}*/
 
 .description{
     font-family: "Times New Roman";
