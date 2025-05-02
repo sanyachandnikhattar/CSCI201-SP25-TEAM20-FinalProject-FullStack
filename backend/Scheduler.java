@@ -1,22 +1,20 @@
 package backend;
 import java.util.List;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class Scheduler
 {
-    private DatabaseManager dbManager;
+    private DBManager dbManager;
     private List<Course> courses;
 
     public Scheduler() 
     {
-        this.dbManager = new DatabaseManager();
+        this.dbManager = new DBManager();
         courses = new ArrayList<>();
     }
     
-    public Scheduler(DatabaseManager dbManager) 
+    public Scheduler(DBManager dbManager) 
     {
         this.dbManager = dbManager;
         courses = new ArrayList<>();
@@ -32,7 +30,7 @@ public class Scheduler
             while (rs.next()) {
                 String courseName = rs.getString("name");
                 int courseId = rs.getInt("id");
-                results.add(new Course(courseName, courseId));
+                results.add(new Course(courseId, courseName, "", "", dbManager));
             }
             dbManager.disconnection();
         } catch (SQLException e) {

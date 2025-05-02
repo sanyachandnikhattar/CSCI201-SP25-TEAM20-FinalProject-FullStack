@@ -4,23 +4,24 @@ import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet
-public class Scheduler extends HttpServlet
+@WebServlet ("/SchedulerServlet")
+public class SchedulerServlet extends HttpServlet 
 {
     private List<Course> courses;
-    private DatabaseManager dbManager;
-    public Scheduler() {
-        this.dbManager = new DatabaseManager();
+    private DBManager dbManager;
+    public SchedulerServlet() {
+        this.dbManager = new DBManager();
         courses = new ArrayList<>();
     }
     
-    public Scheduler(DatabaseManager dbManager) {
+    public SchedulerServlet(DBManager dbManager) 
+    {
         this.dbManager = dbManager;
         courses = new ArrayList<>();
     }
@@ -34,7 +35,7 @@ public class Scheduler extends HttpServlet
             while (rs.next()) {
                 String courseName = rs.getString("name");
                 int courseId = rs.getInt("id");
-                results.add(new Course(courseName, courseId));
+                results.add(new Course(courseId, courseName, "", "", dbManager));
             }
             dbManager.disconnection();
         } catch (SQLException e) {
@@ -61,6 +62,15 @@ public class Scheduler extends HttpServlet
         }
         return success;
     }
-
-
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException 
+    {
+        //redirect GET requests to POST method
+        doPost(request, response);
+        System.out.println("function doGet called");
+    }
+    
+    
+    
 }

@@ -11,12 +11,17 @@
 
 // export default LoginPage;
 
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 function LoginPage() {
-  const navigate = useNavigate();
 
+  useEffect(() => {
+    fetch('http://localhost:8080/Team20_FullStack_DWA/SchedulerServlet', {});
+  }, []);
+
+  const navigate = useNavigate();
   // form values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

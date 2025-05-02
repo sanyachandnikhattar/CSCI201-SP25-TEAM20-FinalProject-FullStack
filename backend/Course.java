@@ -13,7 +13,8 @@ public class Course {
 	private String courseTime; 
 	DBManager dbManager; 
 	
-	public Course(DBManager dbManager) {
+	public Course(DBManager dbManager) 
+	{
 		this.dbManager = dbManager; 
 	}
 	
