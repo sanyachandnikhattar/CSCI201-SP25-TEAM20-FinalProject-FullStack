@@ -52,15 +52,15 @@ console.log(courseID);
     return{
       courseID: 1,
       courseName: "CSCI 201",
-      meetingDates: "2025-01-15",
-      meetingTime: "12:30 PM",
+      days: "T/Th",
+      time: "12:30 PM",
     }
   }else if(courseID === 2){
     return{
       courseID: 2,
       courseName: "CSCI 270",
-      meetingDates: "2025-01-16",
-      meetingTime: "10:00 AM",
+      days: "M/W",
+      time: "10:00 AM",
     }
   }
 }

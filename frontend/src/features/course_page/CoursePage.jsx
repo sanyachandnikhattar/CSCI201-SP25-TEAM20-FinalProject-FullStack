@@ -45,7 +45,6 @@ function CoursePage(){
   //Load course assignments when the page is initiated
   useEffect(() => {
     getCourseInfo();
-    console.log(courseInfo);
     getCourseAssignments();
   }, [])
 
@@ -169,8 +168,9 @@ function CoursePage(){
         </div>
     )
   }
-
+  console.log(courseInfo);
   return(
+
       <div className={styles.courseDetailPage}>
         <div className={styles.rectangle}></div>
         <div className={styles.content}>
