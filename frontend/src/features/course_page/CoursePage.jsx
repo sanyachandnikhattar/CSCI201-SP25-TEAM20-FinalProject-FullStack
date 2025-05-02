@@ -1,19 +1,21 @@
 import {Link} from "react-router-dom";
+import {EmptyAssignment} from "../../components/course_page/empty/EmptyAssignment";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createAssignment, markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
 import { getCourseAssignmentsById, getCourseInfoById } from "../../services/courseService";
-import { CourseHeader } from '../../components/course_page/CourseHeader';
-import { AssignmentList } from '../../components/course_page/AssignmentList';
-import { Modal } from '../../components/course_page/Modal';
-import { AssignmentForm } from '../../components/course_page/AssignmentForm';
+import { AssignmentList } from '../../components/course_page/assignment_list/AssignmentList';
+import {AssignmentBoard} from "../../components/course_page/assignmen_board/AssignmentBoard";
+import { Modal } from '../../components/course_page/modal/Modal';
+import { AssignmentForm } from '../../components/course_page/assignment_form/AssignmentForm';
 // import { addAssignmentButton } from '../../components/AddAssignmentButton';
 /*
 * IMPORTANT! Use this .module.css file so that the styles are contained for the current module instead of interfering with other files
 * To set styles for an element of a class, do <tag className={styles.class}></tag>, e.g. <div className={styles.inputWrapper}></div>
 * */
 import styles from "./CoursePage.module.css";
+import dayjs from "dayjs";
 
 
 function CoursePage(){
@@ -30,6 +32,9 @@ function CoursePage(){
 
   //Assignments for the course
   const [assignments, setAssignments] = useState(null);
+  const [todayAssignments, setTodayAssignments] = useState([]);
+  const [upcomingAssignments, setUpcomingAssignments] = useState([]);
+
 
   // State for modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +51,37 @@ function CoursePage(){
   useEffect(() => {
     getCourseInfo();
     getCourseAssignments();
+
   }, [])
+
+  useEffect(() => {
+    setTodayUpcoming();
+  }, [assignments]);
+
+  console.log(todayAssignments);
+
+
+  const setTodayUpcoming = () =>{
+    if(!assignments){
+      return;
+    }
+    const today = dayjs().format('YYYY-MM-DD');
+
+    const todayList = [];
+    const upcomingList = [];
+
+    for (const a of assignments) {
+      const due = dayjs(a.dueDate).format('YYYY-MM-DD');
+      if (due === today) {
+        todayList.push(a);
+      } else {
+        upcomingList.push(a);
+      }
+    }
+
+    setTodayAssignments(todayList);
+    setUpcomingAssignments(upcomingList);
+  }
 
   /*
   * Add an assignment for the course
@@ -185,28 +220,44 @@ function CoursePage(){
 
   return(
       <div className={styles.courseDetailPage}>
-        <div className={styles.rectangle}></div>
         <div className={styles.content}>
-          <CourseHeader
-              courseID={courseInfo.courseName}
-              days={courseInfo.days}
-              time={courseInfo.time}
-          />
-          <div className={styles.dashedLine}></div>
-          <div className={styles.assignmentTitle}>Assignments</div>
-            <AssignmentList
-              assignments={assignments}
-              onEditAssignment={handleOpenEditModal}
-              onRemoveAssignment={handleRemoveAssignment}
-            />
-            <div className={styles.addButtonContainer}>
-              <button
+          <div className={styles.courseHeader}>
+            <div className={styles.courseInfo}>
+              <div className={styles.courseTitle}>
+                {courseInfo.courseName}
+              </div>
+              <div className={styles.otherInfo}>
+                {courseInfo.days} {courseInfo.time}
+              </div>
+            </div>
+            <button
                 className={styles.addButton}
                 onClick={handleAddAssignmentClick}
-              >
-                + Add Assignment
-              </button>
+            >
+              + Add Assignment
+            </button>
+          </div>
+          <div className={styles.mainContent}>
+            <div className={styles.todaySection}>
+              <div className={styles.sectionTitle}>Due Today</div>
+              {todayAssignments.length === 0 && <EmptyAssignment period={"today"}></EmptyAssignment>}
+              <AssignmentBoard
+                  assignments={todayAssignments}
+                  onEditAssignment={handleOpenEditModal}
+                  onRemoveAssignment={handleRemoveAssignment}
+              />
             </div>
+            <div className={styles.upcomingSection}>
+              <div className={styles.sectionTitle}>Upcoming</div>
+              {upcomingAssignments.length === 0 && <EmptyAssignment period={"upcoming"}></EmptyAssignment>}
+
+              <AssignmentList
+                  assignments={upcomingAssignments}
+                  onEditAssignment={handleOpenEditModal}
+                  onRemoveAssignment={handleRemoveAssignment}
+              />
+            </div>
+          </div>
         </div>
 
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

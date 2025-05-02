@@ -1,0 +1,15 @@
+.emptyAssignment{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-family: Georgia;
+    margin-top: 50px;
+}
+
+.emptyAssignment img{
+    margin-top: 30px;
+    padding-top: 30px;
+    max-width: 80%;
+}
