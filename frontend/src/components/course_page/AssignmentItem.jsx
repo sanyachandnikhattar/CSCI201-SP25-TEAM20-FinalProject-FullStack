@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../features/course_page/CoursePage.module.css';
+import styles from '../../features/course_page/CoursePage.module.css';
 
 export const AssignmentItem = ({ name, dueDate, description, onEdit, onRemove }) => {
   return (

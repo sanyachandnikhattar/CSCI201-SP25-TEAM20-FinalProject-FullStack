@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
 import {getCourseAssignmentsById, getCourseInfoById} from "../../services/courseService";
-import { CourseHeader } from '../../components/CourseHeader';
-import { AssignmentList } from '../../components/AssignmentList';
-import { Modal } from '../../components/Modal';
-import { AssignmentForm } from '../../components/AssignmentForm';
+import { CourseHeader } from '../../components/course_page/CourseHeader';
+import { AssignmentList } from '../../components/course_page/AssignmentList';
+import { Modal } from '../../components/course_page/Modal';
+import { AssignmentForm } from '../../components/course_page/AssignmentForm';
 // import { addAssignmentButton } from '../../components/AddAssignmentButton';
 /*
 * IMPORTANT! Use this .module.css file so that the styles are contained for the current module instead of interfering with other files

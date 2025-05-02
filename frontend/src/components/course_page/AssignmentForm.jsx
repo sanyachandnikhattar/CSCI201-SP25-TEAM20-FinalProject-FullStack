@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../features/course_page/CoursePage.module.css';
+import styles from '../../features/course_page/CoursePage.module.css';
 
 export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = false }) => {
   const [formData, setFormData] = useState({
