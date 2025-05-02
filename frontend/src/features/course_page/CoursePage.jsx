@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
-import { getCourseAssignments, getCourseInfoById} from "../../services/courseService";
+import {getCourseAssignmentsById, getCourseInfoById} from "../../services/courseService";
 import { CourseHeader } from '../../components/CourseHeader';
 import { AssignmentList } from '../../components/AssignmentList';
 import { Modal } from '../../components/Modal';
@@ -99,8 +99,8 @@ function CoursePage(){
 
   const getCourseAssignments = async () => {
     try {
-      const response = await getCourseAssignments(username, courseId);
-      setAssignments(response);
+      const response = getCourseAssignmentsById("", courseId);
+      setAssignments(response.assignments);
     } catch (e) {
 
     }
@@ -161,14 +161,14 @@ function CoursePage(){
     setIsModalOpen(true);
   };
 
-  if(!courseInfo){
+  if(!courseInfo || !assignments){
     return(
         <div>
           <h1>Loading</h1>
         </div>
     )
   }
-  console.log(courseInfo);
+  console.log(assignments);
   return(
 
       <div className={styles.courseDetailPage}>
@@ -181,19 +181,19 @@ function CoursePage(){
           />
           <div className={styles.dashedLine}></div>
           <div className={styles.assignmentTitle}>Assignments</div>
-          {/*  <AssignmentList */}
-          {/*    assignments={assignments}*/}
-          {/*    onEditAssignment={handleOpenEditModal}*/}
-          {/*    onRemoveAssignment={handleRemoveAssignment}*/}
-          {/*  />*/}
-          {/*  <div className={styles.addButtonContainer}>*/}
-          {/*    <button */}
-          {/*      className={styles.addButton}*/}
-          {/*      onClick={handleAddAssignmentClick}*/}
-          {/*    >*/}
-          {/*      + Add Assignment*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
+            <AssignmentList
+              assignments={assignments}
+              onEditAssignment={handleOpenEditModal}
+              onRemoveAssignment={handleRemoveAssignment}
+            />
+            <div className={styles.addButtonContainer}>
+              <button
+                className={styles.addButton}
+                onClick={handleAddAssignmentClick}
+              >
+                + Add Assignment
+              </button>
+            </div>
         </div>
 
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

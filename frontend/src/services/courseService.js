@@ -47,7 +47,6 @@ export function leaveCourse(username, courseID) {
  */
 
 export function getCourseInfoById(username, courseID){
-console.log(courseID);
   if(courseID === 1){
     return{
       courseID: 1,
@@ -71,27 +70,23 @@ console.log(courseID);
  * @param {string} courseID
  * TODO: Not Implemented
  */
-export function getCourseAssignments(username, courseID) {
+export function getCourseAssignmentsById(username, courseID) {
   // return api.get("/get-course-assignments");
   return {
-    courseID: 1,
-    courseName: "CSCI 201",
-    meetingDates: "2025-01-15",
-    meetingTime: "12:30 PM",
     assignments: [
       {
         assignmentID: 101,
-        assignmentName: "Lab 4",
+        name: "Lab 4",
         dueDate: "2025-05-10",
         dueTime: "11:59 PM",
-        assignmentDesc: "Complete the multithreading exercise",
+        description: "Complete the multithreading exercise",
       },
       {
         assignmentID: 102,
-        assignmentName: "Quiz",
+        name: "Quiz",
         dueDate: "2025-05-15",
         dueTime: "10:00 AM",
-        assignmentDesc: "Midterm quiz on Java concurrency",
+        description: "Midterm quiz on Java concurrency",
       },
     ],
   }
