@@ -40,13 +40,61 @@ export function leaveCourse(username, courseID) {
 }
 
 /**
+ * [GET] Get Course Info By courseID
+ * @param {string} username
+ * @param {int} courseID
+ * TODO: Not Implemented
+ */
+
+export function getCourseInfoById(username, courseID){
+console.log(courseID);
+  if(courseID === 1){
+    return{
+      courseID: 1,
+      courseName: "CSCI 201",
+      meetingDates: "2025-01-15",
+      meetingTime: "12:30 PM",
+    }
+  }else if(courseID === 2){
+    return{
+      courseID: 2,
+      courseName: "CSCI 270",
+      meetingDates: "2025-01-16",
+      meetingTime: "10:00 AM",
+    }
+  }
+}
+
+/**
  * [Patch] Get all assignments of a course
  * @param {string} username
  * @param {string} courseID
  * TODO: Not Implemented
  */
 export function getCourseAssignments(username, courseID) {
-  return api.get("/get-course-assignments");
+  // return api.get("/get-course-assignments");
+  return {
+    courseID: 1,
+    courseName: "CSCI 201",
+    meetingDates: "2025-01-15",
+    meetingTime: "12:30 PM",
+    assignments: [
+      {
+        assignmentID: 101,
+        assignmentName: "Lab 4",
+        dueDate: "2025-05-10",
+        dueTime: "11:59 PM",
+        assignmentDesc: "Complete the multithreading exercise",
+      },
+      {
+        assignmentID: 102,
+        assignmentName: "Quiz",
+        dueDate: "2025-05-15",
+        dueTime: "10:00 AM",
+        assignmentDesc: "Midterm quiz on Java concurrency",
+      },
+    ],
+  }
 }
 
 /**
