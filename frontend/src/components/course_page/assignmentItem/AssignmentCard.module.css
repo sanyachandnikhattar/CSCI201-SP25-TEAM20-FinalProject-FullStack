@@ -1,0 +1,73 @@
+
+.assignment{
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
+    transition: box-shadow ease 0.3s;
+}
+
+.assignment:hover{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+.cardHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.number{
+    color: white;
+    background-color: #396aff;
+    border-radius: 200px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+    font-size: 1.2rem;
+    box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+}
+
+.buttons{
+    display: flex;
+    gap:15px
+}
+
+.editButton, .removeButton{
+    color: #396aff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.assignmentName{
+    display: flex;
+    font-size: 2rem;
+    font-family: Roboto sans-serif;
+}
+
+.dueTime{
+    margin-top: 20px;
+    background-color: #396aff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-family: Roboto;
+    border-radius: 10px;
+}
+
+.timeInfo{
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    gap:10px;
+}
+

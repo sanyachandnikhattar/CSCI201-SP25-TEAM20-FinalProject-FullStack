@@ -1,0 +1,81 @@
+.assignment{
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    min-height: 100px;
+    transition: box-shadow ease 0.3s;
+}
+
+.assignment:hover{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.assignmentInfo{
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    /*flex-direction: column;*/
+}
+
+.assignmentHeader{
+    display: flex;
+    flex-direction: column;
+}
+
+.bookmark{
+    color:#396aff;
+    font-size: 2.5rem;
+}
+
+.assignmentName{
+    font-family: Roboto sans-serif;
+    font-size: 2rem;
+}
+
+.assignmentActions{
+    display: flex;
+    gap:20px;
+    background-color: #396aff;
+    padding: 10px 15px;
+    flex-direction: column;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.dueDate{
+    color:#999aa3;
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+
+.dueTime{
+    display: flex;
+    gap:10px;
+    align-items: center;
+}
+
+
+.editButton, .deleteButton{
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: white;
+}
+
+/*.editButton{*/
+/*    color:#32ab46;*/
+/*}*/
+
+/*.deleteButton{*/
+/*    color:#d11f2b;*/
+/*}*/
+
+.description{
+    font-family: "Times New Roman";
+    font-size: 1.2rem;
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { uploadFile, uploadManualInput } from "../../services/uploadFileService";
 import {Link, useNavigate} from "react-router-dom";
-import CustomDatePicker from "../../components/DatePicker";
+import CustomDatePicker from "../../components/add_assignments/DatePicker";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faXmark,
@@ -13,7 +13,7 @@ import {
     faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./UploadFile.module.css";
-import CustomTimePicker from "../../components/TimePicker";
+import CustomTimePicker from "../../components/add_assignments/TimePicker";
 
 
 function UploadFile(){

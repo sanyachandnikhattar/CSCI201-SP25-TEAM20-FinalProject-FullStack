@@ -40,13 +40,72 @@ export function leaveCourse(username, courseID) {
 }
 
 /**
+ * [GET] Get Course Info By courseID
+ * @param {string} username
+ * @param {int} courseID
+ * TODO: Not Implemented
+ */
+
+export function getCourseInfoById(username, courseID){
+  if(courseID === 1){
+    return{
+      courseID: 1,
+      courseName: "CSCI 201",
+      days: "T/Th",
+      time: "12:30 PM",
+    }
+  }else if(courseID === 2){
+    return{
+      courseID: 2,
+      courseName: "CSCI 270",
+      days: "M/W",
+      time: "10:00 AM",
+    }
+  }
+}
+
+/**
  * [Patch] Get all assignments of a course
  * @param {string} username
  * @param {string} courseID
  * TODO: Not Implemented
  */
-export function getCourseAssignments(username, courseID) {
-  return api.get("/get-course-assignments");
+export function getCourseAssignmentsById(username, courseID) {
+  // return api.get("/get-course-assignments");
+  if(courseID === "1")
+  return {
+    assignments: [
+      {
+        assignmentID: 101,
+        name: "Lab 4",
+        dueDate: "2025-05-2",
+        dueTime: "11:59 PM",
+        description: "Complete the multithreading exercise",
+      },
+      {
+        assignmentID: 102,
+        name: "Quiz",
+        dueDate: "2025-05-2",
+        dueTime: "10:00 AM",
+        description: "Midterm quiz on Java concurrency",
+      },
+      {
+        assignmentID: 101,
+        name: "Lab 5",
+        dueDate: "2025-05-12",
+        dueTime: "11:59 PM",
+        description: "Complete the multithreading exercise",
+      },
+      {
+        assignmentID: 102,
+        name: "Quiz2",
+        dueDate: "2025-05-13",
+        dueTime: "10:00 AM",
+        description: "Midterm quiz on Java concurrency",
+      },
+    ],
+  }
+  else return {assignments:[]}
 }
 
 /**
