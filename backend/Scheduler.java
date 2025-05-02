@@ -1,27 +1,29 @@
-package name;
-
-import java.util.ArrayList;
+package backend;
 import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class Scheduler(){
+public class Scheduler
+{
     private DatabaseManager dbManager;
     private List<Course> courses;
 
-    public Scheduler() {
+    public Scheduler() 
+    {
         this.dbManager = new DatabaseManager();
         courses = new ArrayList<>();
     }
     
-    public Scheduler(DatabaseManager dbManager) {
+    public Scheduler(DatabaseManager dbManager) 
+    {
         this.dbManager = dbManager;
         courses = new ArrayList<>();
     }
    
-    public List<Course> searchCourse(String query) {
+    public List<Course> searchCourse(String query) 
+    {
         List<Course> results = new ArrayList<>();
         try {
             dbManager.connection();
@@ -39,9 +41,11 @@ public class Scheduler(){
         return results;
     }
 
-    public boolean joinCourse(int courseId, String userId) {
+    public boolean joinCourse(int courseId, String userId) 
+    {
         boolean success = false;
-        try {
+        try 
+        {
             Connection conn = dbManager.connection();
             PreparedStatement stmt = conn.prepareStatement(
                 "INSERT INTO user_courses (user_id, course_id) VALUES (?, ?)"
@@ -52,14 +56,15 @@ public class Scheduler(){
             success = stmt.executeUpdate() > 0;
             
             dbManager.disconnection();
-        } catch (SQLException e) {
+        } 
+        
+        catch (SQLException e) 
+        {
             e.printStackTrace();
         }
+        
         return success;
     }
-    public boolean createCourse(String courseName, String date, String time) {
-    // keep or note?  String date, String time
-    }
-
 }
+
 
