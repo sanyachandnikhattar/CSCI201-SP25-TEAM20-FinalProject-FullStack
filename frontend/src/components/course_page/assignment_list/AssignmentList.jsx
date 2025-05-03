@@ -13,7 +13,7 @@ export const AssignmentList = ({ assignments, onEditAssignment, onRemoveAssignme
           dueTime={assignment.dueTime}
           description={assignment.desc}
           onEdit={(data) => onEditAssignment(index, data)}
-          onRemove={() => onRemoveAssignment(index)}
+          onRemove={() => onRemoveAssignment(assignment)}
         />
       ))}
     </div>

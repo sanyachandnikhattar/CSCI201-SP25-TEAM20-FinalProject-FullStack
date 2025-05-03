@@ -122,9 +122,10 @@ function CoursePage(){
   * Remove an assignment
   * @param {string} assignmentID
   * */
-  const handleRemoveAssignment = async (assignmentID) => {
+  const handleRemoveAssignment = async (assignment) => {
     try {
-      const response = await removeAssignment(assignmentID);
+      const response = await removeAssignment(assignment.assignmentID);
+      const assignmentID = assignment.assignmentID;
       setAssignments(preAssignments => preAssignments.filter(assignment => assignment.assignmentID !== assignmentID))
     } catch (e) {
 
@@ -171,11 +172,15 @@ function CoursePage(){
     if (isAddingAssignment) {
       try {
         const payload = {
-          ...updatedData,
-          courseID: courseIdInt,
+          assignmentName: updatedData.name,
+          desc: updatedData.description,
+          dueDate: updatedData.dueDate,
+          dueTime: updatedData.dueTime,
+          courseID: courseIdInt
         };
+
         console.log(payload);
-        const response = await createAssignment(username, payload); // <-- Wait for the request
+        const response = await createAssignment(payload); // <-- Wait for the request
         const newAssignment = {
           ...payload,
           assignmentID: response.data.assignmentID // or however your backend returns it

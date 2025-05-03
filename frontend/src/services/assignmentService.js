@@ -7,8 +7,8 @@ import api from "./api"
  * @param {object} assignmentData
  * TODO: Not Implemented
  */
-export function createAssignment(username, assignmentData){
-    return api.post("/api/assignments?action=create");
+export function createAssignment(assignmentData){
+    return api.post("/AssignmentServlet?action=create", assignmentData);
 }
 
 
