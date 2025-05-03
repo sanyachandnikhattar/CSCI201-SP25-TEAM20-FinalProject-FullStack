@@ -194,7 +194,15 @@ function CoursePage(){
       }
     } else if (editingIndex !== null && assignments) {
       try {
-        const response = await editAssignmentInfo(username, assignments[editingIndex].assignmentID, updatedData);
+        const payload = {
+          assignmentID:assignments[editingIndex].assignmentID,
+          assignmentName: updatedData.name,
+          desc: updatedData.description,
+          dueDate: updatedData.dueDate,
+          dueTime: updatedData.dueTime,
+          courseID: courseIdInt
+        };
+        const response = await editAssignmentInfo(payload);
         const newAssignments = [...assignments];
         newAssignments[editingIndex] = {
           ...newAssignments[editingIndex],

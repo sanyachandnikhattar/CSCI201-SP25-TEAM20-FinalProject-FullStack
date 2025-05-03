@@ -40,8 +40,8 @@ export function markCompleteAssignment(username, assignmentID){
  * @param {object} assignmentData
  * TODO: Not Implemented
  */
-export function editAssignmentInfo(username, assignmentID, assignmentData){
-    return api.post("/AssignmentServlet?action=edit");
+export function editAssignmentInfo(assignmentData){
+    return api.post("/AssignmentServlet?action=edit", assignmentData);
 }
 
 /**
