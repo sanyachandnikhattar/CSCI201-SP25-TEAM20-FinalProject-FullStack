@@ -86,7 +86,7 @@ function RegisterPage() {
     !errors.email &&
     !errors.password;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     // mark all touched
@@ -109,8 +109,11 @@ function RegisterPage() {
 
     // TODO: call your authService.register({ fullName, university, email, password })
     // on success, maybe auto-login or redirect to login:
-    register(fullName, email, university, password);
-    navigate('/login');
+    const response = await register(fullName, email, university, password);
+    if(response.data["register_status"] === 1){
+      navigate('/');
+    }
+
   };
 
   return (

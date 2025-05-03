@@ -12,7 +12,7 @@ export function login(email, password){
         "email":email,
         "password":password
     }
-    return api.post("/LoginServlet");
+    return api.post("/LoginServlet", data);
 }
 
 

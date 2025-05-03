@@ -63,7 +63,7 @@ function LoginPage() {
     !errors.email &&
     !errors.password;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     // mark all touched to trigger errors
@@ -76,8 +76,12 @@ function LoginPage() {
 
     // TODO: call your authService.login(email, password)
     // on success:
-    login(email, password);
-    navigate('/'); 
+    const response = await login(email, password);
+    console.log(response["login_status"]);
+    if(response.data["login_status"] === 1){
+      navigate('/');
+    }
+
   };
 
   return (
