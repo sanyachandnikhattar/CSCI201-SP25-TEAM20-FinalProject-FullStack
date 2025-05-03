@@ -22,10 +22,6 @@ export function uploadFile(username,formData){
  *  @param {FormData} formData
  * TODO: Not Implemented
  */
-export function uploadManualInput(username,formData){
-    return api.post("/upload-manual-input", formData, {
-        headers:{
-            'Content-Type': 'multipart/form-data',
-        }
-    });
+export function uploadManualInput(formData){
+    return api.post("/ManualInputServlet", formData);
 }

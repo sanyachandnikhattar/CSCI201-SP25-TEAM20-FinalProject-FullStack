@@ -192,13 +192,14 @@ function UploadFile(){
                 "dueTime":formattedDueTime,
                 "description":description,
             }
+
             console.log(assignmentData);
             try{
                 const response = await uploadManualInput(assignmentData);
                 resetInputRegion();
 
             }catch (e){
-
+                console.error(e);
             }
 
         }
