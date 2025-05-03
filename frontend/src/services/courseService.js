@@ -15,28 +15,22 @@ export function createCourse(username) {
  * @param {string} courseName
  * TODO: Not Implemented
  */
-export function searchCourseByName(username, courseName) {
-  return api.get("/search-course");
+export function searchCourseByName(courseName) {
+  return api.get(`/SearchServlet?query=${courseName}`);
 }
 
-/**
- * [PATCH] Join a Course
- * @param {string} username
- * @param {string} courseID
- * TODO: Not Implemented
- */
-export function joinCourse(username, courseID) {
-  return api.patch("/join-course");
+export function joinCourse(courseID) {
+  const userID = localStorage.getItem("user_id");
+  return api.post("/UserCourseServlet?action=join",
+      null,
+      { params: { userID, courseID } });
 }
 
-/**
- * [Patch] Leave a Course
- * @param {string} username
- * @param {string} courseID
- * TODO: Not Implemented
- */
-export function leaveCourse(username, courseID) {
-  return api.patch("/leave-course");
+export function leaveCourse(courseID) {
+  const userID = localStorage.getItem("user_id");
+  return api.post("/UserCourseServlet?action=leave",
+      null,
+      { params: { userID, courseID } });
 }
 
 /**
@@ -46,23 +40,14 @@ export function leaveCourse(username, courseID) {
  * TODO: Not Implemented
  */
 
-export function getCourseInfoById(username, courseID){
-  if(courseID === 1){
-    return{
-      courseID: 1,
-      courseName: "CSCI 201",
-      days: "T/Th",
-      time: "12:30 PM",
-    }
-  }else if(courseID === 2){
-    return{
-      courseID: 2,
-      courseName: "CSCI 270",
-      days: "M/W",
-      time: "10:00 AM",
-    }
-  }
+export function getCourseInfoById(courseID){
+    return api.get(`/CourseInfoServlet?courseID=${courseID}`);
 }
+
+export function isEnrolled(userID, courseID) {
+  return api.get(`/CourseEnrolledServlet?userID=${userID}&courseID=${courseID}`);
+}
+
 
 /**
  * [Patch] Get all assignments of a course

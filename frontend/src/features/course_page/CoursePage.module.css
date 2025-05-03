@@ -72,3 +72,30 @@
 
 
 
+.actionBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+
+.actionBox button {
+  font-size: 0.95rem;
+  padding: 6px 16px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+.joinBtn  { background:#16a34a; }
+.leaveBtn { background:#dc2626; }
+.addBtn   { background:#2563eb; }
+
+.joinBtn:hover  { background:#15803d; }
+.leaveBtn:hover { background:#b91c1c; }
+.addBtn:hover   { background:#1d4ed8; }
+
+
+

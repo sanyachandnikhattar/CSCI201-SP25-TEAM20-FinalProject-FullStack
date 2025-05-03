@@ -1,197 +1,241 @@
-import React, { useState, useEffect } from 'react';
-import {useNavigate} from "react-router-dom";
-import { getAllCourses } from '../../services/courseService';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAllCourses, searchCourseByName, joinCourse, leaveCourse } from "../../services/courseService";
 
-const CourseDashboard = () => {
+/** CourseDashboard
+ *  – Logged‑in: private course dashboard **plus** global course search
+ *  – Guest: only search + public course results
+ */
+export default function CourseDashboard() {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState([]);
-  const [user, setUser] = useState(null);
+  const isLoggedIn = Boolean(localStorage.getItem("email"));
+
   const [loading, setLoading] = useState(true);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [courses, setCourses] = useState([]);
+
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      const email = localStorage.getItem("email");
-      if (!email) {
-        navigate('/login');
-        return;
-      }
-
-      const user_id = localStorage.getItem("user_id");
-
+    if (!isLoggedIn) {
+      setLoading(false);
+      return;
+    }
+    const uid = localStorage.getItem("user_id");
+    (async () => {
       try {
-        const data = await getAllCourses(user_id);
-        console.log(data.data)
-        setCourses(data.data);
-        setUser({ firstName: "", lastName: "" }); // Or load from backend if needed
-      } catch (error) {
-        console.error("Failed to load courses:", error);
+        const { data } = await getAllCourses(uid);
+        setCourses(data);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
-    };
+    })();
+  }, [isLoggedIn]);
 
-    fetchCourses();
-  }, []);
-
-
-  const handleLogout = () => {
-    localStorage.setItem("email", "");
-    navigate("/login");
-  }
-
-  const calculateDaysUntilDue = (dueDate) => {
-    const today = new Date();
-    const due = new Date(dueDate);
-    const diffTime = due - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) {
+      setResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const { data } = await searchCourseByName(q);
+      setResults(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSearching(false);
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
+        <div className="flex items-center justify-center h-screen">
+          <div className="h-12 w-12 rounded-full border-t-2 border-b-2 border-purple-500 animate-spin" />
+        </div>
     );
   }
-  console.log(courses);
-  return (
 
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Course Dashboard</h1>
-          {user && (
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                Welcome, {user.firstName} {user.lastName}
-              </span>
+  return (
+      <div className="min-h-screen bg-gray-100 p-6">
+        <header className="flex items-center justify-between max-w-7xl mx-auto mb-8">
+          <h1 className="text-3xl font-bold">Course Dashboard</h1>
+          {isLoggedIn && (
               <button
-                  onClick={handleLogout}
-                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/login");
+                  }}
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
               >
                 Logout
               </button>
-            </div>
           )}
-        </div>
-      </header>
+        </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Course List</h2>
-            <button 
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors flex items-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              Add Course
+        <section className="max-w-4xl mx-auto mb-12">
+          <form onSubmit={handleSearch} className="flex shadow rounded-lg overflow-hidden">
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search courses by name…"
+                className="flex-grow px-4 py-3 outline-none"
+            />
+            <button type="submit" className="bg-purple-600 text-white px-6">
+              Search
             </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <div 
-                key={course.courseID}
-                onClick={() => navigate(`/course/${course.courseID}`)}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <div className="bg-purple-600 text-white p-4">
-                  <h3 className="text-lg font-bold">{course.courseName}</h3>
-                  <p className="text-sm opacity-90">
-                    Meets: {course.courseDates} at {course.courseTime}
-                  </p>
-                </div>
-                <div className="p-4">
-                  <h4 className="font-medium text-gray-700 mb-2">Upcoming Assignments</h4>
-                  {course.assignments.length > 0 ? (
-                    <ul className="space-y-3">
-                      {course.assignments.map((assignment) => {
-                        const daysUntilDue = calculateDaysUntilDue(assignment.dueDate);
-                        let urgencyColor = "bg-green-100 text-green-800";
-                        if (daysUntilDue <= 1) {
-                          urgencyColor = "bg-red-100 text-red-800";
-                        } else if (daysUntilDue <= 3) {
-                          urgencyColor = "bg-yellow-100 text-yellow-800";
-                        }
-
+          </form>
+          {searching && <p className="text-sm text-gray-500 mt-2">Searching…</p>}
+          {query && (
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold mb-4">Search Results</h2>
+                {results.length === 0 ? (
+                    <p className="text-gray-500">No courses found.</p>
+                ) : (
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {results.map((c) => {
+                        const enrolled = courses.some(k => k.courseID === c.courseID);
                         return (
-                          <li key={assignment.assignmentID} className="flex justify-between items-center bg-gray-50 p-3 rounded">
-                            <span className="font-medium">{assignment.assignmentName}</span>
-                            <span className={`text-xs px-2 py-1 rounded ${urgencyColor}`}>
-                              Due: {new Date(assignment.dueDate).toLocaleDateString()}
-                            </span>
-                          </li>
+                            <div key={c.courseID} className="bg-white rounded-lg shadow p-4">
+                              <h3 className="font-semibold text-lg mb-1">{c.courseName}</h3>
+                              <p className="text-sm text-gray-600 mb-2">
+                                Meets: {c.courseDates} at {c.courseTime}
+                              </p>
+
+                              <button
+                                  onClick={() => navigate(`/course/${c.courseID}`)}
+                                  className="text-purple-600 hover:text-purple-800 text-sm mr-4"
+                              >
+                                View Details →
+                              </button>
+
+                              {isLoggedIn && (
+                                  <button
+                                      onClick={async () => {
+                                        const enrolled = courses.some(k => k.courseID === c.courseID);
+                                        if (enrolled) {
+                                          await leaveCourse(c.courseID);
+                                          setCourses(prev => prev.filter(k => k.courseID !== c.courseID));
+                                        } else {
+                                          await joinCourse(c.courseID);
+                                          setCourses(prev => [...prev, c]);
+                                        }
+                                      }}
+                                      className={`mt-3 px-3 py-1 rounded text-sm
+        ${courses.some(k => k.courseID === c.courseID)
+                                          ? "bg-red-600 text-white"
+                                          : "bg-green-600 text-white"}`}
+                                  >
+                                    {courses.some(k => k.courseID === c.courseID) ? "Leave" : "Join"}
+                                  </button>
+                              )}
+                            </div>
+
                         );
                       })}
-                    </ul>
-                  ) : (
-                    <p className="text-gray-500 italic">No upcoming assignments</p>
-                  )}
-                  <div className="mt-4 pt-3 border-t border-gray-200 flex justify-end">
-                    <button className="text-purple-600 hover:text-purple-800 text-sm font-medium">
-                      View Details →
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">To Do</h2>
-          
-          <div className="space-y-4">
-            {courses.flatMap(course => 
-              course.assignments.map(assignment => ({
-                ...assignment,
-                courseName: course.courseName,
-                courseID: course.courseID
-              }))
-            ).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-            .map((assignment) => {
-              const daysUntilDue = calculateDaysUntilDue(assignment.dueDate);
-              let urgencyColor = "text-green-600";
-              if (daysUntilDue <= 1) {
-                urgencyColor = "text-red-600";
-              } else if (daysUntilDue <= 3) {
-                urgencyColor = "text-yellow-600";
-              }
-              
-              return (
-                <div key={`${assignment.courseID}-${assignment.assignmentID}`} className="flex items-center p-3 bg-gray-50 rounded">
-                  <input type="checkbox" className="h-5 w-5 text-purple-600 rounded" />
-                  <div className="ml-4 flex-grow">
-                    <h4 className="font-medium">{assignment.assignmentName}</h4>
-                    <p className="text-sm text-gray-600">{assignment.courseName}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className={`font-medium ${urgencyColor}`}>
-                      Due: {new Date(assignment.dueDate).toLocaleDateString()}
                     </div>
-                    <div className="text-sm text-gray-500">{assignment.dueTime}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          
-          <div className="mt-6">
-            <button className="flex items-center text-purple-600 hover:text-purple-800 font-medium" onClick={() => {navigate('/upload-file')}}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              Add Assignment
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-};
+                )}
+              </div>
+          )}
+        </section>
 
-export default CourseDashboard;
+        {isLoggedIn && (
+            <>
+              {/* Course list */}
+              <section className="max-w-7xl mx-auto mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold">Your Courses</h2>
+                  <button
+                      onClick={() => navigate("/add-course")}
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700"
+                  >
+                    <span className="text-lg">＋</span> Add Course
+                  </button>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {courses.map((course) => (
+                      <div
+                          key={course.courseID}
+                          className="bg-white rounded-lg shadow hover:shadow-lg cursor-pointer transition"
+                          onClick={() => navigate(`/course/${course.courseID}`)}
+                      >
+                        <div className="bg-purple-600 text-white p-4 rounded-t-lg">
+                          <h3 className="text-lg font-bold">{course.courseName}</h3>
+                          <p className="text-sm opacity-90">
+                            Meets: {course.courseDates} at {course.courseTime}
+                          </p>
+                        </div>
+                        <div className="p-4">
+                          <h4 className="font-medium mb-2">Upcoming Assignments</h4>
+                          {course.assignments?.length ? (
+                              <ul className="space-y-2">
+                                {course.assignments.slice(0, 3).map((a) => (
+                                    <li
+                                        key={a.assignmentID}
+                                        className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded"
+                                    >
+                                      <span>{a.assignmentName}</span>
+                                      <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
+                              Due: {new Date(a.dueDate).toLocaleDateString()}
+                            </span>
+                                    </li>
+                                ))}
+                              </ul>
+                          ) : (
+                              <p className="text-gray-500 italic text-sm">No upcoming assignments</p>
+                          )}
+                          <div className="pt-3 border-t mt-4 text-right">
+                            <button
+                                onClick={() => navigate(`/course/${course.courseID}`)}
+                                className="text-purple-600 text-sm hover:text-purple-800"
+                            >
+                              View Details →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="max-w-7xl mx-auto mt-12 bg-white rounded-lg shadow p-6">
+                <h2 className="text-xl font-semibold mb-4">To Do</h2>
+                <div className="space-y-4">
+                  {courses
+                      .flatMap((c) => c.assignments.map((a) => ({ ...a, courseName: c.courseName })))
+                      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+                      .map((a) => (
+                          <div key={a.assignmentID} className="flex items-center p-3 bg-gray-50 rounded">
+                            <input type="checkbox" className="h-5 w-5 text-purple-600 rounded" />
+                            <div className="ml-4 flex-grow">
+                              <h4 className="font-medium">{a.assignmentName}</h4>
+                              <p className="text-sm text-gray-600">{a.courseName}</p>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium text-green-600">
+                                Due: {new Date(a.dueDate).toLocaleDateString()}
+                              </div>
+                              <div className="text-sm text-gray-500">{a.dueTime}</div>
+                            </div>
+                          </div>
+                      ))}
+                </div>
+                <button
+                    onClick={() => navigate("/upload-file")}
+                    className="mt-6 flex items-center text-purple-600 hover:text-purple-800 font-medium"
+                >
+                  <span className="text-2xl mr-2">＋</span> Add Assignment
+                </button>
+              </section>
+            </>
+        )}
+      </div>
+  );
+}

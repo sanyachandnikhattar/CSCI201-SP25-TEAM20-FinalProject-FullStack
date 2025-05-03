@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createAssignment, markCompleteAssignment, editAssignmentInfo, removeAssignment} from "../../services/assignmentService";
-import { getCourseAssignmentsById, getCourseInfoById } from "../../services/courseService";
+import { getCourseAssignmentsById, getCourseInfoById, isEnrolled, joinCourse, leaveCourse } from "../../services/courseService";
 import { AssignmentList } from '../../components/course_page/assignment_list/AssignmentList';
 import {AssignmentBoard} from "../../components/course_page/assignmen_board/AssignmentBoard";
 import { Modal } from '../../components/course_page/modal/Modal';
@@ -22,6 +22,7 @@ function CoursePage(){
   //unique user identifier
   //TODO: This is temporary. Update to align with the real login implementation.
   const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
 
   //Unique identifier for current course page. Extracted from the URL.
   const { courseId } = useParams();
@@ -46,6 +47,8 @@ function CoursePage(){
   const [currentAssignment, setCurrentAssignment] = useState(null);
 
   const [isAddingAssignment, setIsAddingAssignment] = useState(false);
+  const [enrolled,    setEnrolled]   = useState(false);
+
 
   //Load course assignments when the page is initiated
   useEffect(() => {
@@ -143,14 +146,20 @@ function CoursePage(){
     }
   }
 
-  const getCourseInfo = async () =>{
+  const getCourseInfo = async () => {
     try {
-      const response = await getCourseInfoById("", courseIdInt);
-      setCourseInfo(response);
-    }catch (e){
+      const { data } = await getCourseInfoById(courseIdInt);
+      setCourseInfo(data);
 
+      const uid = Number(localStorage.getItem("user_id"));
+      const res  = await isEnrolled(uid, courseIdInt);
+      setEnrolled(Boolean(res.data.enrolled));
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
+
+
 
   const handleOpenEditModal = (index, assignmentData) => {
     setEditingIndex(index);
@@ -241,23 +250,58 @@ function CoursePage(){
 
   return(
       <div className={styles.courseDetailPage}>
+        <header className="flex items-center justify-between max-w-7xl mx-auto mt-4 mb-8">
+          <h1 className="text-3xl font-bold" onClick={()=>{navigate("/")}}>Back</h1>
+          {email && (
+              <button
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/login");
+                  }}
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+              >
+                Logout
+              </button>
+          )}
+        </header>
         <div className={styles.content}>
           <div className={styles.courseHeader}>
             <div className={styles.courseInfo}>
-              <div className={styles.courseTitle}>
-                {courseInfo.courseName}
-              </div>
+              <div className={styles.courseTitle}>{courseInfo.courseName}</div>
               <div className={styles.otherInfo}>
-                {courseInfo.days} {courseInfo.time}
+                {courseInfo.meetingDay} &nbsp; {courseInfo.meetingTime}
               </div>
             </div>
-            <button
-                className={styles.addButton}
-                onClick={handleAddAssignmentClick}
-            >
-              + Add Assignment
-            </button>
+
+            {email && (
+                <div className={styles.actionBox}>
+                  <button
+                      onClick={async () => {
+                        if (enrolled) await leaveCourse(courseIdInt);
+                        else await joinCourse(courseIdInt);
+
+                        const {data} =
+                            await isEnrolled(Number(localStorage.getItem("user_id")), courseIdInt);
+                        setEnrolled(Boolean(data.enrolled));
+                      }}
+                      className={`${enrolled ? styles.leaveBtn : styles.joinBtn}`}
+                  >
+                    {enrolled ? "Leave Course" : "Join Course"}
+                  </button>
+
+                  {enrolled && (
+                      <button
+                          onClick={handleAddAssignmentClick}
+                          className={styles.addBtn}
+                      >
+                        Add Assignment
+                      </button>
+                  )}
+                </div>
+            )}
           </div>
+
+
           <div className={styles.mainContent}>
             <div className={styles.todaySection}>
               <div className={styles.sectionTitle}>Due Today</div>
