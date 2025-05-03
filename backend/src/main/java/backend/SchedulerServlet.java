@@ -32,17 +32,20 @@ public class SchedulerServlet extends HttpServlet {
 
         try {
             Connection conn = dbManager.connection();
-if (conn != null) {
-                String sql = "SELECT * FROM courses WHERE name LIKE '%" + query + "%'";
-                ResultSet rs = dbManager.executeQuery(sql);
+	    if (conn != null) {
+                 String sql = "SELECT * FROM Course WHERE CourseName LIKE ?";
+	         PreparedStatement stmt = conn.prepareStatement(sql);
+	         stmt.setString(1, "%" + query + "%");
+                 ResultSet rs = stmt.executeQuery();
 
-                while (rs != null && rs.next()) {
+                while (rs.next()) {
                     String courseName = rs.getString("name");
                     int courseId = rs.getInt("id");
                     results.add(new Course(courseName, courseId));
                 }
-                dbManager.disconnection();
-            }
+		 stmt.close();
+          	 dbManager.disconnection();        
+	    }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,8 +62,9 @@ if (conn != null) {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         
+	String email = request.getParameter("email");
         int courseId = Integer.parseInt(request.getParameter("courseId"));
-        String userId = request.getParameter("userId");
+
 
         boolean success = false;
 
@@ -68,7 +72,7 @@ if (conn != null) {
             Connection conn = dbManager.connection();
             if (conn != null) {
                 PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO user_courses (user_id, course_id) VALUES (?, ?)");
+                    "INSERT INTO UserCourse (userEmail, courseID) VALUES (?, ?)");
 		    
                 stmt.setString(1, userId);
                 stmt.setInt(2, courseId);
