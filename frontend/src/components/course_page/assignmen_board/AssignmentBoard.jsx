@@ -12,7 +12,7 @@ export const AssignmentBoard = ({ assignments, onEditAssignment, onRemoveAssignm
                     name={assignment.assignmentName}
                     dueDate={assignment.dueDate}
                     dueTime={assignment.dueTime}
-                    description={assignment.description}
+                    description={assignment.desc}
                     onEdit={(data) => onEditAssignment(index, data)}
                     onRemove={() => onRemoveAssignment(index)}
                 />
