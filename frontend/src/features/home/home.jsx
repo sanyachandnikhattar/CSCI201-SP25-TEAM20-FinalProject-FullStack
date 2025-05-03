@@ -176,17 +176,31 @@ export default function CourseDashboard() {
                           <h4 className="font-medium mb-2">Upcoming Assignments</h4>
                           {course.assignments?.length ? (
                               <ul className="space-y-2">
-                                {course.assignments.slice(0, 3).map((a) => (
-                                    <li
-                                        key={a.assignmentID}
-                                        className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded"
-                                    >
-                                      <span>{a.assignmentName}</span>
-                                      <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
-                              Due: {new Date(a.dueDate).toLocaleDateString()}
-                            </span>
-                                    </li>
-                                ))}
+                                {course.assignments.slice(0, 3).map((a) => {
+                                  const today = new Date();
+                                  const due = new Date(a.dueDate);
+                                  const daysLeft = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+
+                                  let badgeColor = "bg-green-100 text-green-800";
+                                  if (daysLeft <= 1) {
+                                    badgeColor = "bg-red-100 text-red-800";
+                                  } else if (daysLeft <= 3) {
+                                    badgeColor = "bg-yellow-100 text-yellow-800";
+                                  }
+
+                                  return (
+                                      <li
+                                          key={a.assignmentID}
+                                          className="flex justify-between items-center text-sm bg-gray-50 p-2 rounded"
+                                      >
+                                        <span>{a.assignmentName}</span>
+                                        <span className={`${badgeColor} px-2 py-0.5 rounded text-xs`}>
+        Due: {new Date(a.dueDate).toISOString().split('T')[0]}
+      </span>
+                                      </li>
+                                  );
+                                })}
+
                               </ul>
                           ) : (
                               <p className="text-gray-500 italic text-sm">No upcoming assignments</p>
@@ -219,10 +233,26 @@ export default function CourseDashboard() {
                               <p className="text-sm text-gray-600">{a.courseName}</p>
                             </div>
                             <div className="text-right">
-                              <div className="font-medium text-green-600">
-                                Due: {new Date(a.dueDate).toLocaleDateString()}
+
+                              <div className="text-sm text-gray-500">
+                                <div className="text-right">
+                                  {(() => {
+                                    const today = new Date();
+                                    const due = new Date(a.dueDate);
+                                    const daysLeft = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+                                    let urgencyColor = "text-green-600";
+                                    if (daysLeft <= 1) urgencyColor = "text-red-600";
+                                    else if (daysLeft <= 3) urgencyColor = "text-yellow-600";
+
+                                    return (
+                                        <div className={`font-medium ${urgencyColor}`}>
+                                          Due: {new Date(a.dueDate).toISOString().split('T')[0]}
+                                        </div>
+                                    );
+                                  })()}
+                                  <div className="text-sm text-gray-500">{a.dueTime}</div>
+                                </div>
                               </div>
-                              <div className="text-sm text-gray-500">{a.dueTime}</div>
                             </div>
                           </div>
                       ))}

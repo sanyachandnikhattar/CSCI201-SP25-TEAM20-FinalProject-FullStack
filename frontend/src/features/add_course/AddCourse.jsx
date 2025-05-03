@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadCourse } from "../../services/courseService";
+import CustomTimePicker from "../../components/add_assignments/TimePicker";
+
 
 export default function AddCourse() {
     const navigate = useNavigate();
@@ -82,13 +84,15 @@ export default function AddCourse() {
             {/* Meeting Time */}
             <label className="block mb-3">
                 <span className="font-medium">Meeting Time</span>
-                <input
-                    type="text"
-                    value={meetingTime}
-                    onChange={onChange(setMeetingTime, "meetingTime")}
-                    className="w-full mt-1 px-3 py-2 border rounded"
-                    placeholder="10:00"
-                />
+                <div className="mt-1">
+                    <CustomTimePicker
+                        label=""
+                        value={meetingTime}
+                        onChange={(newValue) => setMeetingTime(newValue)}
+                        error={Boolean(errors.meetingTime)}
+                        fullWidth={true}
+                    />
+                </div>
                 {errors.meetingTime && (
                     <p className="text-red-600 text-sm mt-1">{errors.meetingTime}</p>
                 )}

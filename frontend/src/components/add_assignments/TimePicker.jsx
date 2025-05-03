@@ -5,16 +5,17 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
 export default function CustomTimePicker({
-     label = "Select Time",
-     value,
-     onChange,
-     minTime,
-     maxTime,
-     ampm = false,
-     disabled = false,
-     size = "small",
-     error=false
- }) {
+                                             label = "Select Time",
+                                             value,
+                                             onChange,
+                                             minTime,
+                                             maxTime,
+                                             ampm = false,
+                                             disabled = false,
+                                             size = "small",
+                                             error = false,
+                                             fullWidth = true
+                                         }) {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopTimePicker
@@ -26,11 +27,12 @@ export default function CustomTimePicker({
                 slotProps={{
                     textField: {
                         error: error,
+                        fullWidth: true,
                     },
                 }}
                 ampm={ampm}
                 disabled={disabled}
-                renderInput={(params) => <TextField {...params} size={size}/>}
+                renderInput={(params) => <TextField {...params} size={size} fullWidth={fullWidth}  />}
             />
         </LocalizationProvider>
     );

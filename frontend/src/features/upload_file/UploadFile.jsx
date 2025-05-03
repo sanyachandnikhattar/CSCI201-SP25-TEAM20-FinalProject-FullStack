@@ -291,6 +291,7 @@ function UploadFile(){
                                 error={!!dueTimeError}
                                 onChange={(newValue) => {setDueTime(newValue); setDueTimeError('');}}
                                 width={400}
+                                fullWidth={false}
                             />
                         </div>
                         <div className={styles.dueDateTimeWrapper}>
