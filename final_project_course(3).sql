@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS users;
     full_name VARCHAR(100) NOT NULL,
     university VARCHAR(100),
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_ VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Course 
