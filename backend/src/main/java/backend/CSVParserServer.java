@@ -9,10 +9,21 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
-@WebServlet("/CSVParserServer")
+import jakarta.servlet.http.Part;
+//   <form method="POST" action="upload" enctype="multipart/form-data" >
+//            File:
+//            <input type="file" name="file" id="file" /> <br/>
+//            Destination:
+//            <input type="text" value="/tmp" name="destination"/>
+//            </br>
+//            <input type="submit" value="Upload" name="upload" id="upload" />
+//        </form>
+    //The enctype attribute must be set to a value of multipart/form-data.
+    //Its method must be POST.
+@WebServlet(name = "CSVParserServer", urlPatterns = {"/CSVParserServer"})
 @MultipartConfig
-public class CSVParser extends HttpServlet {
-    private DBManager dbManager;
+    public class CSVParser extends HttpServlet {
+   /* private DBManager dbManager;
 
     @Override
     public void init() throws ServletException {
@@ -20,12 +31,16 @@ public class CSVParser extends HttpServlet {
     }
 
    @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
     response.setContentType("text/plain");
     PrintWriter out = response.getWriter();
     String email = request.getParameter("email");
+    if (email == null || email.isEmpty()) {
+            out.println("Email parameter is missing.");
+            return;
+        }
 
     int successCount = 0;
 
@@ -36,7 +51,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             return;
         }
 
-        // Step 1: Look up user_id from the email
+        // Get user_id based on email
         int userId = -1;
         PreparedStatement getUserStmt = conn.prepareStatement("SELECT user_id FROM Users WHERE email = ?");
         getUserStmt.setString(1, email);
@@ -53,9 +68,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             return;
         }
 
-        // Step 2: Get the file part
+        // Get uploaded CSV file
         Part filePart = request.getPart("file");
-        if (filePart == null) {
+        if (filePart == null || filePart.getSize() == 0) {
             out.println("No file uploaded.");
             return;
         }
