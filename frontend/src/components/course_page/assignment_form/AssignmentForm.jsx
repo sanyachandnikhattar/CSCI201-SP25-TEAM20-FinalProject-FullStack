@@ -51,6 +51,7 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    maxLength={100}
                     required
                 />
             </div>
@@ -78,6 +79,7 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
+                    maxLength={100}
                     rows="3"
                 />
             </div>
