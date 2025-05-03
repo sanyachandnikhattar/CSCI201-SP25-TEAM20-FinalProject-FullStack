@@ -36,16 +36,34 @@ public class SchedulerServlet extends HttpServlet {
         try {
             Connection conn = dbManager.connection();
             if (conn != null) {
-                PreparedStatement stmt = conn.prepareStatement(
-                    "INSERT INTO UserCourse (userEmail, courseID) VALUES (?, ?)");
-		    
-                stmt.setString(1, userId);
+	
+	    	// Step 1: Look up user_id from the email
+	        int userId = -1;
+	        PreparedStatement getUserStmt = conn.prepareStatement("SELECT user_id FROM Users WHERE email = ?");
+	        getUserStmt.setString(1, email);
+	        ResultSet rs = getUserStmt.executeQuery();
+	
+	        if (rs.next()) {
+	             userId = rs.getInt("user_id");
+	        }
+	
+		rs.close();
+	        getUserStmt.close();
+	
+	        if (userId == -1) {
+	             throw new SQLException("No user found with email: " + email);
+	        }
+		
+		// Step 2: Insert into UserCourse
+		PreparedStatement stmt = conn.prepareStatement(
+           	    "INSERT INTO UserCourse (user_id, courseID) VALUES (?, ?)");
+		stmt.setString(1, userId);
                 stmt.setInt(2, courseId);
                 success = stmt.executeUpdate() > 0;
 
                 stmt.close();
                 dbManager.disconnection();
-            }
+           }
         } catch (Exception e) {
             e.printStackTrace();
         }
