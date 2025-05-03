@@ -4,6 +4,7 @@ import LoginPage from "./features/auth/LoginPage";
 import RegisterPage from "./features/auth/RegisterPage";
 import CoursePage from "./features/course_page/CoursePage";
 import UploadFile from "./features/upload_file/UploadFile";
+import AddCourse from "./features/add_course/AddCourse";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />}/>
             <Route path="/course/:courseId" element={<CoursePage/>} />
             <Route path="/upload-file" element={<UploadFile/>} />
+              <Route path="/add-course" element={<AddCourse/>} />
           </Routes>
       </BrowserRouter>
     </div>

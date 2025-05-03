@@ -1,13 +1,9 @@
 import api from "./api";
 
-/**
- * [POST] Create a Course
- * @param {string} username
- * TODO: Not Implemented
- */
-export function createCourse(username) {
-  return api.post("/create-course");
+export function uploadCourse(payload) {
+  return api.post("/CourseServlet?action=create", payload);
 }
+
 
 /**
  * [GET] Search a Course by Name
