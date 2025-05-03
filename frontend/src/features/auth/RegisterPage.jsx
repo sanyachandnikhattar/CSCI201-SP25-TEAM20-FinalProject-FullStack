@@ -111,7 +111,11 @@ function RegisterPage() {
     // on success, maybe auto-login or redirect to login:
     const response = await register(fullName, email, university, password);
     if(response.data["register_status"] === 1){
+      localStorage.setItem("username", fullName);
+      localStorage.setItem("email", email);
       navigate('/');
+    }else{
+      alert("Registration Failed")
     }
 
   };

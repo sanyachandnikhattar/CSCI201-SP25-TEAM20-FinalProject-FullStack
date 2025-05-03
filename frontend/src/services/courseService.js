@@ -114,59 +114,6 @@ export function getCourseAssignmentsById(username, courseID) {
  * TODO: Not Implemented
  */
 export function getAllCourses(username) {
-  // return api.get("/get-all-courses");
-  return [
-    {
-      courseID: 1,
-      courseName: "CSCI 201",
-      meetingDates: "2025-01-15",
-      meetingTime: "12:30 PM",
-      assignments: [
-        {
-          assignmentID: 101,
-          assignmentName: "Lab 4",
-          dueDate: "2025-05-10",
-          dueTime: "11:59 PM",
-          assignmentDesc: "Complete the multithreading exercise",
-        },
-        {
-          assignmentID: 102,
-          assignmentName: "Quiz",
-          dueDate: "2025-05-15",
-          dueTime: "10:00 AM",
-          assignmentDesc: "Midterm quiz on Java concurrency",
-        },
-      ],
-    },
-    {
-      courseID: 2,
-      courseName: "CSCI 270",
-      meetingDates: "2025-01-16",
-      meetingTime: "10:00 AM",
-      assignments: [
-        {
-          assignmentID: 201,
-          assignmentName: "Group Project",
-          dueDate: "2025-05-20",
-          dueTime: "11:59 PM",
-          assignmentDesc: "Implement a sorting algorithm visualization",
-        },
-      ],
-    },
-    {
-      courseID: 3,
-      courseName: "CSCI 350",
-      meetingDates: "2025-01-17",
-      meetingTime: "2:00 PM",
-      assignments: [
-        {
-          assignmentID: 301,
-          assignmentName: "Midterm",
-          dueDate: "2025-04-30",
-          dueTime: "3:30 PM",
-          assignmentDesc: "In-class midterm examination",
-        },
-      ],
-    },
-  ];
+  return api.get("/CourseServlet");
+
 }

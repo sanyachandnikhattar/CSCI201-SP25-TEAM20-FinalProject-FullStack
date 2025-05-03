@@ -79,7 +79,10 @@ function LoginPage() {
     const response = await login(email, password);
     console.log(response["login_status"]);
     if(response.data["login_status"] === 1){
+      localStorage.setItem("email", email);
       navigate('/');
+    }else{
+      alert("Incorrect Credentials")
     }
 
   };

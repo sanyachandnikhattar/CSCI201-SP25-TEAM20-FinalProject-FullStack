@@ -8,7 +8,7 @@ import api from "./api"
  * TODO: Not Implemented
  */
 export function createAssignment(username, assignmentData){
-    return api.post("/create-assignment");
+    return api.post("/api/assignments/create");
 }
 
 

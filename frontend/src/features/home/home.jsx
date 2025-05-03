@@ -1,32 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from "react-router-dom";
 import { getAllCourses } from '../../services/courseService';
 
 const CourseDashboard = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCourses = async () => {
+      const email = localStorage.getItem("email");
+      if (!email) {
+        navigate('/login');
+        return;
+      }
+
       try {
-        const coursesData = getAllCourses();
-        
-        setCourses(coursesData);
-        setUser({
-            username: 'student1',
-            firstName: 'John',
-            lastName: 'Doe'
-        });
-        setLoading(false);
+        const data = await getAllCourses();
+        console.log(data.data)
+        setCourses(data.data);
+        setUser({ firstName: "", lastName: "" }); // Or load from backend if needed
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Failed to load courses:", error);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchCourses();
   }, []);
+
+
+  const handleLogout = () => {
+    localStorage.setItem("email", "");
+    navigate("/login");
+  }
 
   const calculateDaysUntilDue = (dueDate) => {
     const today = new Date();
@@ -54,7 +64,8 @@ const CourseDashboard = () => {
               <span className="text-gray-700">
                 Welcome, {user.firstName} {user.lastName}
               </span>
-              <button 
+              <button
+                  onClick={handleLogout}
                 className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
               >
                 Logout
@@ -87,7 +98,7 @@ const CourseDashboard = () => {
                 <div className="bg-purple-600 text-white p-4">
                   <h3 className="text-lg font-bold">{course.courseName}</h3>
                   <p className="text-sm opacity-90">
-                    Meets: {new Date(course.meetingDates).toLocaleDateString()} at {course.meetingTime}
+                    Meets: {course.meetingDay} at {course.meetingTime}
                   </p>
                 </div>
                 <div className="p-4">
