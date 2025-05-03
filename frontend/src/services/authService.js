@@ -7,8 +7,12 @@ import api from "./api"
  * @param {string} password
  * TODO: endpoint is temporary. Update with the correct endpoint.
  */
-export function login(username, password){
-    return api.post("/login");
+export function login(email, password){
+    const data = {
+        "email":email,
+        "password":password
+    }
+    return api.post("/LoginServlet");
 }
 
 
@@ -18,6 +22,12 @@ export function login(username, password){
  * @param {string} password
  * TODO: endpoint is temporary. Update with the correct endpoint.
  */
-export function register(username, password){
-    return api.post("/register");
+export function register(username,email, university, password){
+    const data = {
+        "username":username,
+        "email":email,
+        "university":university,
+        "password":password
+    }
+    return api.post("/RegisterServlet", data);
 }

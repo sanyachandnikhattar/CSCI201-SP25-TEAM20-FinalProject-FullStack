@@ -13,6 +13,7 @@
 
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {login, register} from "../../services/authService";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -108,6 +109,7 @@ function RegisterPage() {
 
     // TODO: call your authService.register({ fullName, university, email, password })
     // on success, maybe auto-login or redirect to login:
+    register(fullName, email, university, password);
     navigate('/login');
   };
 

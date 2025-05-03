@@ -11,17 +11,15 @@
 
 // export default LoginPage;
 
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {login, register} from "../../services/authService";
 
 function LoginPage() {
 
-  useEffect(() => {
-    fetch('http://localhost:8080/Team20_FullStack_DWA/SchedulerServlet', {});
-  }, []);
 
   const navigate = useNavigate();
+
   // form values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -78,6 +76,7 @@ function LoginPage() {
 
     // TODO: call your authService.login(email, password)
     // on success:
+    login(email, password);
     navigate('/'); 
   };
 

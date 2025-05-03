@@ -174,6 +174,7 @@ function CoursePage(){
         // TODO: Update only when the request is successful
         const newAssignments = [...assignments, updatedData];
         setAssignments(newAssignments);
+        setTodayUpcoming();
       }catch (e){
 
       }
