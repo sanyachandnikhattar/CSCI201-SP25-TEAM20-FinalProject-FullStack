@@ -124,7 +124,7 @@ function CoursePage(){
   * */
   const handleRemoveAssignment = async (assignmentID) => {
     try {
-      const response = await removeAssignment(username, assignmentID);
+      const response = await removeAssignment(assignmentID);
       setAssignments(preAssignments => preAssignments.filter(assignment => assignment.assignmentID !== assignmentID))
     } catch (e) {
 
@@ -167,39 +167,43 @@ function CoursePage(){
   };
 
   // Function to handle form submission
-  const handleFormSubmit = (updatedData) => {
+  const handleFormSubmit = async (updatedData) => {
     if (isAddingAssignment) {
-      // Add new assignment
-      try{
-        const response = createAssignment(username, updatedData);
-        // TODO: Update only when the request is successful
-        const newAssignments = [...assignments, updatedData];
+      try {
+        const payload = {
+          ...updatedData,
+          courseID: courseIdInt,
+        };
+        console.log(payload);
+        const response = await createAssignment(username, payload); // <-- Wait for the request
+        const newAssignment = {
+          ...payload,
+          assignmentID: response.data.assignmentID // or however your backend returns it
+        };
+
+        const newAssignments = [...assignments, newAssignment];
         setAssignments(newAssignments);
         setTodayUpcoming();
-      }catch (e){
-
+      } catch (e) {
+        console.error("Failed to create assignment:", e);
       }
-
     } else if (editingIndex !== null && assignments) {
-      // Edit existing assignment
-      try{
-        // TODO: Map an index to an assignmentID
-        const response = editAssignmentInfo(username, assignmentID, updatedData);
-        // TODO: Update only when the request is successful
+      try {
+        const response = await editAssignmentInfo(username, assignments[editingIndex].assignmentID, updatedData);
         const newAssignments = [...assignments];
         newAssignments[editingIndex] = {
           ...newAssignments[editingIndex],
           ...updatedData
         };
         setAssignments(newAssignments);
-      }catch (e){
-
+      } catch (e) {
+        console.error("Failed to edit assignment:", e);
       }
-
-
     }
+
     handleCloseModal();
   };
+
 
   const handleAddAssignmentClick = () => {
     setIsAddingAssignment(true);

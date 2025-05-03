@@ -41,7 +41,7 @@ export function markCompleteAssignment(username, assignmentID){
  * TODO: Not Implemented
  */
 export function editAssignmentInfo(username, assignmentID, assignmentData){
-    return api.post("/api/assignments?action=edit");
+    return api.post("/AssignmentServlet?action=edit");
 }
 
 /**
@@ -50,6 +50,6 @@ export function editAssignmentInfo(username, assignmentID, assignmentData){
  * @param {string} assignmentID
  * TODO: Not Implemented
  */
-export function removeAssignment(username, assignmentID){
-    return api.delete("/remove-assignment");
+export function removeAssignment(assignmentID){
+    return api.post(`/AssignmentServlet?action=delete&assignmentID=${assignmentID}`);
 }
