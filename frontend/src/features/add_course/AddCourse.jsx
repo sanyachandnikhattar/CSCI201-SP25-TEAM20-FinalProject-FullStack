@@ -59,7 +59,8 @@ export default function AddCourse() {
                     value={courseName}
                     onChange={onChange(setCourseName, "courseName")}
                     className="w-full mt-1 px-3 py-2 border rounded"
-                    placeholder="CSCI 201"
+                    placeholder="Enter a course name..."
+                    maxLength={100}
                 />
                 {errors.courseName && (
                     <p className="text-red-600 text-sm mt-1">{errors.courseName}</p>
@@ -75,6 +76,7 @@ export default function AddCourse() {
                     onChange={onChange(setMeetingDay, "meetingDay")}
                     className="w-full mt-1 px-3 py-2 border rounded"
                     placeholder="Monday / Wednesday"
+                    maxLength={100}
                 />
                 {errors.meetingDay && (
                     <p className="text-red-600 text-sm mt-1">{errors.meetingDay}</p>
