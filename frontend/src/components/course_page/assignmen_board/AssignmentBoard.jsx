@@ -14,7 +14,7 @@ export const AssignmentBoard = ({ assignments, onEditAssignment, onRemoveAssignm
                     dueTime={assignment.dueTime}
                     description={assignment.desc}
                     onEdit={(data) => onEditAssignment(index, data)}
-                    onRemove={() => onRemoveAssignment(index)}
+                    onRemove={() => onRemoveAssignment(assignment)}
                 />
             ))}
         </div>

@@ -165,18 +165,22 @@ function UploadFile(){
     };
 
     const handleSubmit = async ()=>{
-        if(mode === "file"){
-            const formData = new FormData();
-            formData.append("file", file);
-            try{
-                const response = await uploadFile(formData);
-            }catch (error){
-                handleSubmitError();
-                console.error(error);
-            }finally {
+        if (mode === "file") {
+            if (!file) { setFileError(true); return; }
+
+            const fd = new FormData();
+            fd.append("email", localStorage.getItem("email") ?? "");
+            fd.append("file",  file);
+
+            try {
+                await uploadFile(fd);
                 resetFile();
+                // maybe navigate or show a toast
+            } catch (err) {
+                console.error(err);
+                handleSubmitError();
             }
-        }else if(mode === "manual"){
+        } else if(mode === "manual"){
             if(!validateInputs()){
                 return;
             }

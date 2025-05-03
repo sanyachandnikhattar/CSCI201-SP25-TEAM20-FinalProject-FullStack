@@ -4,15 +4,11 @@ import api from "./api"
 /**
  * [POST] Upload File
  * @param {string} username
- *  @param {FormData} formData
  * TODO: Not Implemented
  */
-export function uploadFile(username,formData){
-    return api.post("/upload-file", formData, {
-        headers:{
-            'Content-Type': 'multipart/form-data',
-        }
-    });
+export function uploadFile(fd) {
+    // ⚠️ DO NOT set Content‑Type – Axios adds it with boundary
+    return api.post("/FileUploadServlet", fd);
 }
 
 
