@@ -22,41 +22,6 @@ public class SchedulerServlet extends HttpServlet {
         dbManager = new DBManager();
     }
 
-    // GET for search
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        
-        String query = request.getParameter("query");
-        List<Course> results = new ArrayList<>();
-
-        try {
-            Connection conn = dbManager.connection();
-	    if (conn != null) {
-                 String sql = "SELECT * FROM Course WHERE CourseName LIKE ?";
-	         PreparedStatement stmt = conn.prepareStatement(sql);
-	         stmt.setString(1, "%" + query + "%");
-                 ResultSet rs = stmt.executeQuery();
-
-                while (rs.next()) {
-                    String courseName = rs.getString("name");
-                    int courseId = rs.getInt("id");
-                    results.add(new Course(courseName, courseId));
-                }
-		 stmt.close();
-          	 dbManager.disconnection();        
-	    }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        for (Course course : results) {
-            out.println("<p>" + course.getName() + " (ID: " + course.getId() + ")</p>");
-        }
-    }
-
     // POST for joining a course
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
