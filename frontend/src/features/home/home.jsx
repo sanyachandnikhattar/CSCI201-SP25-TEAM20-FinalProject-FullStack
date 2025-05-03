@@ -53,8 +53,9 @@ const CourseDashboard = () => {
       </div>
     );
   }
-
+  console.log(courses);
   return (
+
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
@@ -92,7 +93,8 @@ const CourseDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
               <div 
-                key={course.courseID} 
+                key={course.courseID}
+                onClick={() => navigate(`/course/${course.courseID}`)}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
               >
                 <div className="bg-purple-600 text-white p-4">
@@ -177,7 +179,7 @@ const CourseDashboard = () => {
           </div>
           
           <div className="mt-6">
-            <button className="flex items-center text-purple-600 hover:text-purple-800 font-medium">
+            <button className="flex items-center text-purple-600 hover:text-purple-800 font-medium" onClick={() => {navigate('/upload-file')}}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
               </svg>

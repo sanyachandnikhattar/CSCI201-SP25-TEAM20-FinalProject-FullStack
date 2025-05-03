@@ -8,7 +8,7 @@ import api from "./api"
  * TODO: Not Implemented
  */
 export function createAssignment(username, assignmentData){
-    return api.post("/api/assignments/create");
+    return api.post("/api/assignments?action=create");
 }
 
 
@@ -41,7 +41,7 @@ export function markCompleteAssignment(username, assignmentID){
  * TODO: Not Implemented
  */
 export function editAssignmentInfo(username, assignmentID, assignmentData){
-    return api.patch("/edit-assignment-info");
+    return api.post("/api/assignments?action=edit");
 }
 
 /**
