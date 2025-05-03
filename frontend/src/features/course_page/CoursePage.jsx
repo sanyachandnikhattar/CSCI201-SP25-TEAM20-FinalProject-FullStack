@@ -134,7 +134,7 @@ function CoursePage(){
 
   const getCourseAssignments = async () => {
     try {
-      const response = getCourseAssignmentsById(username, courseId);
+      const response = getCourseAssignmentsById(courseId);
       setAssignments(response.assignments);
     } catch (e) {
 

@@ -110,9 +110,11 @@ function RegisterPage() {
     // TODO: call your authService.register({ fullName, university, email, password })
     // on success, maybe auto-login or redirect to login:
     const response = await register(fullName, email, university, password);
+    console.log(response.data);
     if(response.data["register_status"] === 1){
       localStorage.setItem("username", fullName);
       localStorage.setItem("email", email);
+      localStorage.setItem("user_id", response.data.user_id);
       navigate('/');
     }else{
       alert("Registration Failed")

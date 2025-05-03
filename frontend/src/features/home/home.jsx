@@ -17,8 +17,10 @@ const CourseDashboard = () => {
         return;
       }
 
+      const user_id = localStorage.getItem("user_id");
+
       try {
-        const data = await getAllCourses();
+        const data = await getAllCourses(user_id);
         console.log(data.data)
         setCourses(data.data);
         setUser({ firstName: "", lastName: "" }); // Or load from backend if needed
@@ -100,7 +102,7 @@ const CourseDashboard = () => {
                 <div className="bg-purple-600 text-white p-4">
                   <h3 className="text-lg font-bold">{course.courseName}</h3>
                   <p className="text-sm opacity-90">
-                    Meets: {course.meetingDay} at {course.meetingTime}
+                    Meets: {course.courseDates} at {course.courseTime}
                   </p>
                 </div>
                 <div className="p-4">

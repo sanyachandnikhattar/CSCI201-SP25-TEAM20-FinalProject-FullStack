@@ -70,50 +70,49 @@ export function getCourseInfoById(username, courseID){
  * @param {string} courseID
  * TODO: Not Implemented
  */
-export function getCourseAssignmentsById(username, courseID) {
-  // return api.get("/get-course-assignments");
-  if(courseID === "1")
-  return {
-    assignments: [
-      {
-        assignmentID: 101,
-        name: "Lab 4",
-        dueDate: "2025-05-2",
-        dueTime: "11:59 PM",
-        description: "Complete the multithreading exercise",
-      },
-      {
-        assignmentID: 102,
-        name: "Quiz",
-        dueDate: "2025-05-2",
-        dueTime: "10:00 AM",
-        description: "Midterm quiz on Java concurrency",
-      },
-      {
-        assignmentID: 101,
-        name: "Lab 5",
-        dueDate: "2025-05-12",
-        dueTime: "11:59 PM",
-        description: "Complete the multithreading exercise",
-      },
-      {
-        assignmentID: 102,
-        name: "Quiz2",
-        dueDate: "2025-05-13",
-        dueTime: "10:00 AM",
-        description: "Midterm quiz on Java concurrency",
-      },
-    ],
-  }
-  else return {assignments:[]}
+export function getCourseAssignmentsById(courseID) {
+  return api.get(`/AssignmentServlet?courseID=${courseID}`);
+  // if(courseID === "1")
+  // return {
+  //   assignments: [
+  //     {
+  //       assignmentID: 101,
+  //       name: "Lab 4",
+  //       dueDate: "2025-05-2",
+  //       dueTime: "11:59 PM",
+  //       description: "Complete the multithreading exercise",
+  //     },
+  //     {
+  //       assignmentID: 102,
+  //       name: "Quiz",
+  //       dueDate: "2025-05-2",
+  //       dueTime: "10:00 AM",
+  //       description: "Midterm quiz on Java concurrency",
+  //     },
+  //     {
+  //       assignmentID: 101,
+  //       name: "Lab 5",
+  //       dueDate: "2025-05-12",
+  //       dueTime: "11:59 PM",
+  //       description: "Complete the multithreading exercise",
+  //     },
+  //     {
+  //       assignmentID: 102,
+  //       name: "Quiz2",
+  //       dueDate: "2025-05-13",
+  //       dueTime: "10:00 AM",
+  //       description: "Midterm quiz on Java concurrency",
+  //     },
+  //   ],
+  // }
+  // else return {assignments:[]}
 }
 
 /**
  * [GET] Get all user's courses
- * @param {string} username
+ * @param {string} user_id
  * TODO: Not Implemented
  */
-export function getAllCourses(username) {
-  return api.get("/CourseServlet");
-
+export function getAllCourses(user_id) {
+  return api.get(`/CourseServlet?user_id=${user_id}`);
 }

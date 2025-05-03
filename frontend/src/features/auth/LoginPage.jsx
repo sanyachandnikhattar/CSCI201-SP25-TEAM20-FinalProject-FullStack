@@ -80,6 +80,7 @@ function LoginPage() {
     console.log(response["login_status"]);
     if(response.data["login_status"] === 1){
       localStorage.setItem("email", email);
+      localStorage.setItem("user_id", response.data.user_id);
       navigate('/');
     }else{
       alert("Incorrect Credentials")
