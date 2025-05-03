@@ -253,6 +253,7 @@ function UploadFile(){
                                 onChange={handleInputChange(setCourseName, setCourseNameError)}
                                 className={styles.inputText}
                                 placeholder="Enter course name..."
+                                maxLength={100}
                             />
                         </div>
                         {courseNameError && <div className={styles.inputErrorMessage}>{courseNameError}</div>}
@@ -266,6 +267,7 @@ function UploadFile(){
                                    onChange={handleInputChange(setAssignmentName, setAssignmentNameError)}
                                    className={styles.inputText}
                                    placeholder="Enter assignment name..."
+                                   maxLength={100}
                             />
                         </div>
                         {assignmentNameError && <div className={styles.inputErrorMessage}>{assignmentNameError}</div>}
@@ -308,7 +310,9 @@ function UploadFile(){
                                 value={description}
                                 onChange={(e)=>setDescription(e.target.value)}
                                 className={styles.inputText}
+                                maxLength={100}
                                 placeholder="Enter assignment description..."/>
+
                         </div>
                     </div>
                 </div>)}
