@@ -30,7 +30,7 @@ public class ManualInputParserServlet extends HttpServlet {
         String courseName = request.getParameter("courseName");
         String courseDates = request.getParameter("courseDates");
         String courseTime = request.getParameter("courseTime");
-
+        in courseID = -1;
         boolean success = false;
 
         try {
