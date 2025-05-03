@@ -215,8 +215,12 @@ function CoursePage(){
         const newAssignments = [...assignments];
         newAssignments[editingIndex] = {
           ...newAssignments[editingIndex],
-          ...updatedData
+          assignmentName: updatedData.name,
+          desc: updatedData.description,
+          dueDate: updatedData.dueDate,
+          dueTime: updatedData.dueTime
         };
+
         setAssignments(newAssignments);
       } catch (e) {
         console.error("Failed to edit assignment:", e);

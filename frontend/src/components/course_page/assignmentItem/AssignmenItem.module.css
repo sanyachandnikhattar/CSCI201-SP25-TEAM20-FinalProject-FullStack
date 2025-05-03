@@ -6,6 +6,7 @@
     justify-content: space-between;
     min-height: 100px;
     transition: box-shadow ease 0.3s;
+    overflow-y: auto;
 }
 
 .assignment:hover{
