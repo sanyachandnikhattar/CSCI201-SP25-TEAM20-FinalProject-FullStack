@@ -10,16 +10,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import jakarta.servlet.http.Part;
-//   <form method="POST" action="upload" enctype="multipart/form-data" >
-//            File:
-//            <input type="file" name="file" id="file" /> <br/>
-//            Destination:
-//            <input type="text" value="/tmp" name="destination"/>
-//            </br>
-//            <input type="submit" value="Upload" name="upload" id="upload" />
-//        </form>
+/*<form method="POST" action="/CSVParserServer" enctype="multipart/form-data">
+  <input type="email" name="email" placeholder="Enter your email" required /><br/>
+  File:
+  <input type="file" name="file" id="file" required /> <br/>
+  <input type="submit" value="Upload CSV" />
+</form>
     //The enctype attribute must be set to a value of multipart/form-data.
-    //Its method must be POST.
+    //Its method must be POST.*/
 @WebServlet(name = "CSVParserServer", urlPatterns = {"/CSVParserServer"})
 @MultipartConfig
     public class CSVParser extends HttpServlet {
@@ -117,4 +115,5 @@ import jakarta.servlet.http.Part;
         e.printStackTrace();
         out.println("Error processing CSV: " + e.getMessage());
     }
+ }
 }
