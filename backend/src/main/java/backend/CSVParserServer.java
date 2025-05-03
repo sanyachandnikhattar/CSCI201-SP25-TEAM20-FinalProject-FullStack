@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 @WebServlet("/CSVParserServer")
+@MultipartConfig
 public class CSVParser extends HttpServlet {
     private DBManager dbManager;
 
@@ -18,58 +19,87 @@ public class CSVParser extends HttpServlet {
         dbManager = new DBManager();
     }
 
-    // POST to upload and parse CSV
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+   @Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        
-        try (
-            BufferedReader reader = new BufferedReader(new InputStreamReader(filePart.getInputStream()));
-            Connection conn = dbManager.connection()
-        ) {
-            if (conn == null) {
-                out.println("Database connection failed.");
-                return;
-            }
 
+    response.setContentType("text/plain");
+    PrintWriter out = response.getWriter();
+    String email = request.getParameter("email");
+
+    int successCount = 0;
+
+    try {
+        Connection conn = dbManager.connection();
+        if (conn == null) {
+            out.println("Database connection failed.");
+            return;
+        }
+
+        // Step 1: Look up user_id from the email
+        int userId = -1;
+        PreparedStatement getUserStmt = conn.prepareStatement("SELECT user_id FROM Users WHERE email = ?");
+        getUserStmt.setString(1, email);
+        ResultSet rs = getUserStmt.executeQuery();
+
+        if (rs.next()) {
+            userId = rs.getInt("user_id");
+        }
+        rs.close();
+        getUserStmt.close();
+
+        if (userId == -1) {
+            out.println("No user found with email: " + email);
+            return;
+        }
+
+        // Step 2: Get the file part
+        Part filePart = request.getPart("file");
+        if (filePart == null) {
+            out.println("No file uploaded.");
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(filePart.getInputStream()))) {
             String line;
-            String[] fields = line.split(",");
-            if (fields.length < 5) continue; // skip bad lines
-           
-            int successCount = 0;  // Initialize successCount
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(",");
+                if (fields.length < 4) continue;
 
-            String userEmail = fields[0].trim();
-            int courseId = Integer.parseInt(fields[1].trim());
-            String courseName = fields[2].trim();
-            String courseDates = fields[3].trim();
-            String courseTime = fields[4].trim();
+                int courseId = Integer.parseInt(fields[0].trim());
+                String courseName = fields[1].trim();
+                String courseDates = fields[2].trim();
+                String courseTime = fields[3].trim();
 
-            // Insert into Course
-            PreparedStatement stmt = conn.prepareStatement(
-                      "INSERT IGNORE INTO Course" +
-                      " (userEmail, CourseID, CourseName, CourseDates, CourseTime) " +
-                      "VALUES (?, ?, ?, ?, ?)"
-                );
-                stmt.setString(1, userEmail);
-                stmt.setInt(2, courseId);
-                stmt.setString(3, courseName);
-                stmt.setString(4, courseDates);
-                stmt.setString(5, courseTime);
+                // Insert into Course
+                PreparedStatement courseStmt = conn.prepareStatement(
+                        "INSERT IGNORE INTO Course (courseID, courseName, courseDates, courseTime) VALUES (?, ?, ?, ?)");
+                courseStmt.setInt(1, courseId);
+                courseStmt.setString(2, courseName);
+                courseStmt.setString(3, courseDates);
+                courseStmt.setString(4, courseTime);
+                courseStmt.executeUpdate();
+                courseStmt.close();
 
-                if (stmt.executeUpdate() > 0) successCount++;
+                // Insert into UserCourse
+                PreparedStatement userCourseStmt = conn.prepareStatement(
+                        "INSERT IGNORE INTO UserCourse (user_id, courseID) VALUES (?, ?)");
+                userCourseStmt.setInt(1, userId);
+                userCourseStmt.setInt(2, courseId);
+                int inserted = userCourseStmt.executeUpdate();
+                userCourseStmt.close();
 
-                stmt.close();
+                if (inserted > 0) {
+                    successCount++;
+                }
             }
 
             dbManager.disconnection();
-            out.println("CSV upload complete. Courses added: " + successCount);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            out.println("Error processing CSV: " + e.getMessage());
+            out.println("CSV upload complete. Courses joined: " + successCount);
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        out.println("Error processing CSV: " + e.getMessage());
     }
 }
