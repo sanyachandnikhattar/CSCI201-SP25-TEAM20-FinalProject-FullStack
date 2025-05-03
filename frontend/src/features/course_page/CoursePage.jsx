@@ -134,8 +134,9 @@ function CoursePage(){
 
   const getCourseAssignments = async () => {
     try {
-      const response = getCourseAssignmentsById(courseId);
-      setAssignments(response.assignments);
+      const response = await getCourseAssignmentsById(courseId);
+      console.log(response);
+      setAssignments(response.data);
     } catch (e) {
 
     }
@@ -212,6 +213,8 @@ function CoursePage(){
 
   // TODO: Loading content is required
   if(!courseInfo || !assignments){
+    console.log(courseInfo);
+    console.log(assignments);
     return(
         <div>
           <h1>Loading</h1>

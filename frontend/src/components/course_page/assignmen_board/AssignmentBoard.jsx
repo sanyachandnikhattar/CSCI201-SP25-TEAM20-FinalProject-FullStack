@@ -9,7 +9,7 @@ export const AssignmentBoard = ({ assignments, onEditAssignment, onRemoveAssignm
                 <AssignmentCard
                     key={index}
                     number={index}
-                    name={assignment.name}
+                    name={assignment.assignmentName}
                     dueDate={assignment.dueDate}
                     dueTime={assignment.dueTime}
                     description={assignment.description}

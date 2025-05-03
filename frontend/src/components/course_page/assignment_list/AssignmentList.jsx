@@ -8,7 +8,7 @@ export const AssignmentList = ({ assignments, onEditAssignment, onRemoveAssignme
       {assignments.map((assignment, index) => (
         <AssignmentItem
           key={index}
-          name={assignment.name}
+          name={assignment.assignmentName}
           dueDate={assignment.dueDate}
           dueTime={assignment.dueTime}
           description={assignment.description}
