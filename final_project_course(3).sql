@@ -1,4 +1,4 @@
--- DROP TABLE IF EXISTS user_assignment;
+CREATE DATABASE FinalProject;
 DROP TABLE IF EXISTS UserCourse;
 DROP TABLE IF EXISTS Assignment;
 DROP TABLE IF EXISTS Course;
