@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCourses, searchCourseByName, joinCourse, leaveCourse } from "../../services/courseService";
 
-/** CourseDashboard
- *  – Logged‑in: private course dashboard **plus** global course search
- *  – Guest: only search + public course results
- */
+
 export default function CourseDashboard() {
   const navigate = useNavigate();
   const isLoggedIn = Boolean(localStorage.getItem("email"));
@@ -66,15 +63,22 @@ export default function CourseDashboard() {
       <div className="min-h-screen bg-gray-100 p-6">
         <header className="flex items-center justify-between max-w-7xl mx-auto mb-8">
           <h1 className="text-3xl font-bold">Course Dashboard</h1>
-          {isLoggedIn && (
+          {isLoggedIn ? (
               <button
                   onClick={() => {
                     localStorage.clear();
-                    navigate("/login");
+                    navigate("/");
                   }}
                   className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
               >
                 Logout
+              </button>
+          ) : (
+              <button
+                  onClick={() => navigate("/login")}
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+              >
+                Login
               </button>
           )}
         </header>
@@ -148,7 +152,6 @@ export default function CourseDashboard() {
 
         {isLoggedIn && (
             <>
-              {/* Course list */}
               <section className="max-w-7xl mx-auto mb-8">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold">Your Courses</h2>
