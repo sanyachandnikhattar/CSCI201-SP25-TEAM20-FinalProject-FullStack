@@ -9,6 +9,11 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
         dueTime: null,
         description: ''
     });
+    const [errors, setErrors] = useState({
+        dueDate: '',
+        dueTime: ''
+    });
+
 
     useEffect(() => {
         if (assignment) {
@@ -31,13 +36,24 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const newErrors = {
+            dueDate: formData.dueDate ? '' : 'Due date is required',
+            dueTime: formData.dueTime ? '' : 'Due time is required'
+        };
+
+        setErrors(newErrors);
+
+        if (!formData.dueDate || !formData.dueTime) return;
+
         const output = {
             ...formData,
-            dueDate: formData.dueDate?.toISOString().split('T')[0], // format: YYYY-MM-DD
-            dueTime: formData.dueTime?.toTimeString().split(' ')[0].slice(0, 5) // format: HH:mm
+            dueDate: formData.dueDate.toISOString().split('T')[0],
+            dueTime: formData.dueTime.toTimeString().split(' ')[0].slice(0, 5)
         };
+
         onSubmit(output);
     };
+
 
     return (
         <form className={styles.assignmentForm} onSubmit={handleSubmit}>
@@ -60,17 +76,28 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
                 <label>Due Date</label>
                 <CustomDatePicker
                     value={formData.dueDate}
-                    onChange={(newDate) => setFormData(prev => ({ ...prev, dueDate: newDate }))}
+                    onChange={(newDate) => {
+                        setFormData(prev => ({...prev, dueDate: newDate}));
+                        setErrors(prev => ({...prev, dueDate: ''}));
+                    }}
+                    error={!!errors.dueDate}
                 />
+                {errors.dueDate && <div className={styles.inputError}>{errors.dueDate}</div>}
             </div>
 
             <div className={styles.formGroup}>
                 <label>Due Time</label>
                 <CustomTimePicker
                     value={formData.dueTime}
-                    onChange={(newTime) => setFormData(prev => ({ ...prev, dueTime: newTime }))}
+                    onChange={(newTime) => {
+                        setFormData(prev => ({...prev, dueTime: newTime}));
+                        setErrors(prev => ({...prev, dueTime: ''}));
+                    }}
+                    error={!!errors.dueTime}
                 />
+                {errors.dueTime && <div className={styles.inputError}>{errors.dueTime}</div>}
             </div>
+
 
             <div className={styles.formGroup}>
                 <label htmlFor="description">Description</label>
