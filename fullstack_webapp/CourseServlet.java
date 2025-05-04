@@ -114,6 +114,36 @@ public class CourseServlet extends HttpServlet {
             return;
         }
 
+        //before insertion into the database, check that the newly created Course is NOT a duplicate
+        try {
+            Connection conn1 = DBManager.getConnection(); 
+            PreparedStatement ps1 = conn1.prepareStatement("SELECT 1 FROM Course WHERE courseName = ? AND courseDates = ? AND courseTime = ?");
+            ps1.setString(1, payload.courseName);
+            ps1.setString(2, payload.meetingDay);
+            ps1.setString(3, payload.meetingTime); 
+
+            ResultSet rs1 = ps1.executeQuery(); 
+            if (rs1.next() == true) {
+                //ResultSet is not empty. Duplicate exists. 
+                response.setContentType("application/json"); 
+                response.setCharacterEncoding("UTF-8");
+
+                Map<String,Object> dupeRes = new HashMap<>();
+                dupeRes.put("status", "duplicate exists");
+
+                response.getWriter().write(gson.toJson(dupeRes));
+
+                //return? 
+                return; 
+            }
+        }
+        catch(SQLException sqle) {
+            sqle.printStackTrace(); 
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Database error");
+            return;
+        }
+
         int generatedID;
 
         try { Class.forName("com.mysql.cj.jdbc.Driver"); }

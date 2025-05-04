@@ -13,6 +13,7 @@ export default function AddCourse() {
     const [meetingTime,  setMeetingTime]  = useState("");
     const [description,  setDescription]  = useState("");
     const [errors,       setErrors]       = useState({});
+    //const [duplicate,    setDuplicate]    = useState(null); 
 
     /* helpers */
     const onChange = (setter, key) => e => {
@@ -34,12 +35,18 @@ export default function AddCourse() {
         if (!validate()) return;
 
         try {
-            await uploadCourse({
+            // response is a message from backend 
+            const response = await uploadCourse({
                 courseName,
                 meetingDay,
                 meetingTime,
                 description
             });
+            if(response.status == "duplicate") {
+                // the response from backend indicates the entry was a duplicate 
+                //setDuplicate(true); 
+                alert("That course already exists!"); 
+            }
             navigate("/");                 // go back to dashboard
         } catch (err) {
             console.error(err);
@@ -116,6 +123,16 @@ export default function AddCourse() {
                     Submit
                 </button>
             </div>
+
+            {/* {duplicate && (
+                <div className="text-red-600 text-sm mt-1">
+                    <FontAwesomeIcon className={styles.errorIcon} icon={faTriangleExclamation} />
+                    <div>That course already exists</div>
+                    <FontAwesomeIcon className={styles.closeIcon} icon={faXmark} onClick={() => setDuplicate(false)}/>
+                </div>
+            )
+            }  */}
+            
         </div>
     );
 }
