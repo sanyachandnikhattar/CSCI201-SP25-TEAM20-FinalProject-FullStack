@@ -222,6 +222,7 @@ function CoursePage(){
         };
 
         setAssignments(newAssignments);
+        setTodayUpcoming();
       } catch (e) {
         console.error("Failed to edit assignment:", e);
       }

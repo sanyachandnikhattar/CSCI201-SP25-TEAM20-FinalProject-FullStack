@@ -20,7 +20,6 @@ export default function AddCourse() {
         setter(e.target.value);
         setErrors(prev => ({ ...prev, [key]: "" }));
     };
-    
 
     const validate = () => 
         {
@@ -52,8 +51,8 @@ export default function AddCourse() {
                 meetingTime,
                 description
             });
-            console.log(response.status);
-            if(response.status == "duplicate") {
+            console.log(response.data);
+            if(response.data["duplicate"] == "1") {
                 // the response from backend indicates the entry was a duplicate 
                 //setDuplicate(true); 
                 alert("That course already exists!"); 
