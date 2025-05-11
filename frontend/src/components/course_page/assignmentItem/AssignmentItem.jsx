@@ -7,6 +7,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export const AssignmentItem = ({ name, dueDate, dueTime, description, onEdit, onRemove }) => {
+  const isLoggedIn = Boolean(localStorage.getItem("email"));
+
   return (
     <div className={styles.assignment}>
         {/*<input type="checkbox" className={styles.assignmentCheckbox} />*/}
@@ -32,6 +34,7 @@ export const AssignmentItem = ({ name, dueDate, dueTime, description, onEdit, on
           {description}
         </div>
       </div>
+      {isLoggedIn && (
       <div className={styles.assignmentActions}>
         <button
             className={styles.editButton}
@@ -47,7 +50,7 @@ export const AssignmentItem = ({ name, dueDate, dueTime, description, onEdit, on
 
         </button>
 
-      </div>
+      </div>)}
     </div>
   );
 };
