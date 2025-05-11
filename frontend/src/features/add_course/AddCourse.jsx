@@ -21,14 +21,23 @@ export default function AddCourse() {
         setErrors(prev => ({ ...prev, [key]: "" }));
     };
 
-    const validate = () => {
+    const validate = () => 
+        {
         const e = {};
+    
         if (!courseName.trim())  e.courseName  = "Required";
         if (!meetingDay.trim())  e.meetingDay  = "Required";
-        if (!meetingTime.trim()) e.meetingTime = "Required";
+    
+        const isEmptyTime =
+            !meetingTime || (
+                typeof meetingTime === "string" && !meetingTime.trim()
+            );
+    
+        if (isEmptyTime) e.meetingTime = "Required";
+    
         setErrors(e);
         return Object.keys(e).length === 0;
-    };
+    };  
 
     /* submit */
     const handleSubmit = async () => {
