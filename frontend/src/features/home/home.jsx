@@ -75,7 +75,19 @@ export default function CourseDashboard() {
           <div className="h-12 w-12 rounded-full border-t-2 border-b-2 border-purple-500 animate-spin" />
         </div>
     );
-  }
+  };
+
+  const formatDisplayTime = (timeStr) => {
+    try {
+      const date = new Date(timeStr);
+      if (isNaN(date.getTime())) throw new Error("Invalid date");
+      return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    } catch(e) {
+      console.error(e);
+      return timeStr;
+    }
+  };
+
 
   return (
       <div className="min-h-screen bg-gray-100 p-6">
@@ -128,7 +140,7 @@ export default function CourseDashboard() {
                             <div key={c.courseID} className="bg-white rounded-lg shadow p-4">
                               <h3 className="font-semibold text-lg mb-1">{c.courseName}</h3>
                               <p className="text-sm text-gray-600 mb-2">
-                                Meets: {c.courseDates} at {c.courseTime}
+                                Meets: {c.courseDates} at {formatDisplayTime(c.courseTime)}
                               </p>
 
                               <button
