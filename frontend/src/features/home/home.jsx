@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCourses, searchCourseByName, joinCourse, leaveCourse } from "../../services/courseService";
 
@@ -13,7 +13,23 @@ export default function CourseDashboard() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
+  const debounceRef = useRef();
 
+  const performSearch = async (q) => {
+    if (!q) {
+      setResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const { data } = await searchCourseByName(q);
+      setResults(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSearching(false);
+    }
+  };
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -33,22 +49,24 @@ export default function CourseDashboard() {
     })();
   }, [isLoggedIn]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
     const q = query.trim();
+    clearTimeout(debounceRef.current);
     if (!q) {
       setResults([]);
       return;
     }
-    setSearching(true);
-    try {
-      const { data } = await searchCourseByName(q);
-      setResults(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSearching(false);
-    }
+    debounceRef.current = setTimeout(() => {
+      performSearch(q);
+    }, 100);
+    return () => clearTimeout(debounceRef.current);
+  }, [query]);
+
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    clearTimeout(debounceRef.current);
+    performSearch(query.trim());
   };
 
   if (loading) {
