@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dayjs from "dayjs";
 import styles from './assignmentForm.module.css';
 import CustomTimePicker from "../../add_assignments/TimePicker";
 import CustomDatePicker from "../../add_assignments/DatePicker";
@@ -47,7 +48,7 @@ export const AssignmentForm = ({ assignment, onSubmit, onCancel, isAddingNew = f
 
         const output = {
             ...formData,
-            dueDate: formData.dueDate.toISOString().split('T')[0],
+            dueDate: dayjs(formData.dueDate).format("YYYY-MM-DD"),
             dueTime: formData.dueTime.toTimeString().split(' ')[0].slice(0, 5)
         };
 
