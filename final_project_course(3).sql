@@ -45,38 +45,41 @@ CREATE TABLE Assignment
 -- INSERT SAMPLE USERS
 INSERT INTO users (full_name, university, email, password_)
 VALUES 
-('Alice Smith', 'UCLA', 'alice@ucla.edu', 'hashed_pw1'),
-('Bob Lee', 'USC', 'bob@usc.edu', 'hashed_pw2');
+('Alice Jones', 'UCLA', 'alicejones@ucla.edu', 'hashed_pw1'),
+('John Traveler', 'USC', 'john@usc.edu', 'hashed_pw2');
+
+
 
 -- INSERT SAMPLE COURSES
 INSERT INTO Course (courseName, courseDates, courseTime)
 VALUES
-('CSCI201', 'Monday', '10:00'),
-('CSCI310', 'Wednesday', '14:00');
+('CSCI 270', 'Tuesday / Thursday', '9:30 AM'),
+('CSCI 270', 'Tuesday / Thursday', '12:30 PM'),
+('CSCI 310', 'Monday / Wednesday', '10:00 AM'),
+('CSCI 201', 'Tuesday / Thursday', '11:00 AM');
+
+
+
 
 -- INSERT SAMPLE ASSIGNMENTS
 INSERT INTO Assignment (courseID, aName, dueDate, dueTime, descr)
 VALUES
-(1, 'HW1', '2025-05-10', '23:59', 'Intro to Java Servlets'),
-(1, 'HW2', '2025-05-20', '23:59', 'JDBC and SQL integration'),
-(2, 'Project Proposal', '2025-05-15', '17:00', 'Propose final team project');
+(1, 'Final', '05-14-2025', '11:59 PM', 'final 270!'),
+(2, 'Final', '05-14-2025', '11:59 PM', 'final 270!'),
+(3, 'Syllabus', '09-02-2025', '10:00 AM', 'welcome to 310'),
+(4, 'Final Project', '05-13-2025', '11:59 PM', 'Congratulations, 201!');
+
+
 
 -- ENROLL USERS IN COURSES
 INSERT INTO UserCourse (user_id, courseID)
 VALUES
 (1, 1),
-(1, 2),
-(2, 1);
+(1, 3),
+(1, 4),
+(2, 2),
+(2, 3), 
+(2, 4);
 
--- CREATE TABLE UserAssignment
--- (
--- 	user_id INT,
---   courseID INT NOT NULL,
---   dueDate VARCHAR(45) NOT NULL,
--- dueTime VARCHAR(45) NOT NULL,
---  descr VARCHAR(200) NOT NULL, PRIMARY KEY (userEmail, assignmentID),
--- FOREIGN KEY (userEmail) REFERENCES User(userEmail), 
--- FOREIGN KEY (assignmentID) REFERENCES Assignment(assignmentID),
--- FOREIGN KEY (courseID) REFERENCES COURSE(courseID)
--- );
+
 
