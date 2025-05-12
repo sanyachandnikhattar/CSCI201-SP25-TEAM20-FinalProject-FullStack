@@ -202,7 +202,7 @@ export default function CourseDashboard() {
                         <div className="bg-purple-600 text-white p-4 rounded-t-lg">
                           <h3 className="text-lg font-bold">{course.courseName}</h3>
                           <p className="text-sm opacity-90">
-                            Meets: {course.courseDates} at {course.courseTime}
+                            Meets: {course.courseDates} at {formatDisplayTime(course.courseTime)}
                           </p>
                         </div>
                         <div className="p-4">

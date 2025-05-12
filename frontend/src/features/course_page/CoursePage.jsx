@@ -135,6 +135,17 @@ function CoursePage(){
     }
   }
 
+  const formatDisplayTime = (timeStr) => {
+    try {
+      const date = new Date(timeStr);
+      if (isNaN(date.getTime())) throw new Error("Invalid date");
+      return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    } catch(e) {
+      console.error(e);
+      return timeStr;
+    }
+  };
+
 
   const getCourseAssignments = async () => {
     try {
@@ -274,7 +285,7 @@ function CoursePage(){
             <div className={styles.courseInfo}>
               <div className={styles.courseTitle}>{courseInfo.courseName}</div>
               <div className={styles.otherInfo}>
-                {courseInfo.meetingDay} &nbsp; {courseInfo.meetingTime}
+                {courseInfo.meetingDay} &nbsp; {formatDisplayTime(courseInfo.meetingTime)}
               </div>
             </div>
 
